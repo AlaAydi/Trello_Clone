@@ -1,12 +1,12 @@
 #trello-logo {
-  background-image: url(./../../../assets/trello-logo.gif);
+  background-image: url(./../../../assets/logo.png);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
 }
 
 #trello-logo:hover {
-  background-image: url(./../../../assets/trello-logo-hover.gif);
+  background-image: url(./../../../assets/logo.png);
 }
 
 .logo-filter {
