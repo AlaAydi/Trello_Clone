@@ -5,6 +5,17 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./pages/home/home.component'),
     children: [
+
+        {
+        path: 'login',
+        loadComponent: () =>
+          import('./pages/auth/login/login.component').then(m => m.LoginComponent),
+      },
+      {
+        path: 'registre',
+        loadComponent: () =>
+          import('./pages/auth/sign-up/sign-up.component').then(m => m.SignUpComponent),
+      },
       {
         path: '',
         redirectTo: 'boards',
@@ -19,6 +30,9 @@ export const routes: Routes = [
         path: 'workspace/:id',
         loadComponent: () => import('./pages/workspace/workspace.component'),
       },
+
+
+
     ]
   },
   {
