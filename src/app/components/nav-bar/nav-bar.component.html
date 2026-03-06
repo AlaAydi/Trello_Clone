@@ -10,6 +10,15 @@
       <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
       <app-create-dropdown class="ms-3" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
     </div>
-    <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
+    <div class="flex items-center gap-2">
+      <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
+      <button 
+        *ngIf="authService.isLoggedIn"
+        (click)="logout()"
+        class="ml-2 rounded-sm px-2 py-1 text-xs font-bold uppercase tracking-tight text-white transition-colors hover:bg-red-600 bg-red-500"
+      >
+        Logout
+      </button>
+    </div>
   </nav>
 </div>

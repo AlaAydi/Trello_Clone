@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -6,7 +7,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.component'),
     children: [
 
-        {
+      {
         path: 'login',
         loadComponent: () =>
           import('./pages/auth/login/login.component').then(m => m.LoginComponent),
@@ -24,7 +25,8 @@ export const routes: Routes = [
       {
         path: 'boards',
         loadComponent: () => import('./pages/boards/boards.component'),
-        title: 'Boards | Trello'
+        title: 'Boards | Trello',
+        canActivate: [authGuard]
       },
       {
         path: 'workspace/:id',
@@ -45,3 +47,4 @@ export const routes: Routes = [
     pathMatch: 'full'
   }
 ];
+
