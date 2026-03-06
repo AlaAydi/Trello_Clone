@@ -5,27 +5,31 @@ import { TrelloIconComponent } from "../../icons/trello-icon/trello-icon.compone
 import { WorkspaceIconComponent } from "../../components/workspace-icon/workspace-icon.component";
 import { PlusIconComponent } from "../../icons/plus-icon/plus-icon.component";
 
+import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
+
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css',
-    host: { 'class': 'flex flex-grow flex-col overflow-auto' },
-    imports: [
-        RouterModule,
-        TrelloIconComponent,
-        WorkspaceIconComponent,
-        PlusIconComponent
-    ]
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
+  host: { 'class': 'flex flex-grow flex-col overflow-auto h-screen' },
+  imports: [
+    RouterModule,
+    TrelloIconComponent,
+    WorkspaceIconComponent,
+    PlusIconComponent,
+    NavBarComponent
+  ]
 })
+
 export default class HomeComponent implements OnInit {
-  
+
   appService = inject(AppService);
   data: any;
-  
+
   ngOnInit(): void {
     this.appService.getData().subscribe({
-      next: (res) =>  this.data = res
+      next: (res) => this.data = res
     });
   }
 
@@ -36,5 +40,5 @@ export default class HomeComponent implements OnInit {
       modal.showModal();
     }
   }
-  
+
 }

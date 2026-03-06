@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
+import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
+
 import { AppService } from '../../services/app.service';
 import { TaskCardListComponent } from "../../components/task-card-list/task-card-list.component";
 import { MenuDotsIconComponent } from "../../icons/menu-dots/menu-dots-icon.component";
@@ -14,27 +16,29 @@ import { BoardDragdropComponent } from "../../components/board-dragdrop/board-dr
 import { TaskModalComponent } from "../../components/task-modal/task-modal.component";
 
 @Component({
-    selector: 'app-board',
-    standalone: true,
-    templateUrl: './board.component.html',
-    styleUrl: './board.component.css',
-    host: { 'class': 'flex flex-grow flex-col overflow-auto' },
-    imports: [
-        CommonModule,
-        TaskCardListComponent,
-        MenuDotsIconComponent,
-        BoardSidebarComponent,
-        BoardSettingsComponent,
-        NewListFormComponent,
-        ReactiveFormsModule,
-        FormsModule,
-        BoardDragdropComponent,
-        TaskModalComponent
-    ]
+  selector: 'app-board',
+  standalone: true,
+  templateUrl: './board.component.html',
+  styleUrl: './board.component.css',
+  host: { 'class': 'flex flex-grow flex-col overflow-auto' },
+  imports: [
+    CommonModule,
+    TaskCardListComponent,
+    MenuDotsIconComponent,
+    BoardSidebarComponent,
+    BoardSettingsComponent,
+    NewListFormComponent,
+    ReactiveFormsModule,
+    FormsModule,
+    BoardDragdropComponent,
+    TaskModalComponent,
+    NavBarComponent
+  ]
 })
+
 export default class BoardComponent implements OnInit {
 
-  constructor(private titleService: Title) {}
+  constructor(private titleService: Title) { }
 
   appService = inject(AppService);
   boardService = inject(BoardService);

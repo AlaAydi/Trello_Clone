@@ -1,5 +1,8 @@
 @if (board) {
-  <div class="flex h-full overflow-hidden {{board.background}}" style="view-transition-name: board-transition">
+  <div class="h-screen flex flex-col overflow-hidden">
+    <app-nav-bar></app-nav-bar>
+    <div class="flex flex-grow overflow-hidden {{board.background}}" style="view-transition-name: board-transition">
+
     <app-board-sidebar [workspace]="workspace" [board]="board"></app-board-sidebar>
   
     <div class="bg-cc-board-filter duration-200 h-full w-full flex flex-col overflow-hidden pb-2">
@@ -36,7 +39,9 @@
     <!-- setting sidebar -->
     <app-board-settings [board]="board" [workspace]="workspace"></app-board-settings>
   
+    </div>
   </div>
 } @else {
+
   <p class="text-3xl text-cc-subtle/60 font-semibold mt-20 mx-auto">Page not found.</p>
 }
