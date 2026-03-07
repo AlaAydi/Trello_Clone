@@ -1,12 +1,43 @@
-.logo img { height: 36px; width: auto; object-fit: contain; }
-  .logo-placeholder {
-    height: 36px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 800;
-    font-size: 18px;
-    color: #2563eb;
-    letter-spacing: -0.5px;
-  }
-  .logo-placeholder svg { width: 32px; height: 32px; }
+
+.left {
+  width: 50%;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 32px 72px;
+  overflow: hidden;
+  position: relative;
+}
+
+.left::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(37,99,235,.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 100%, rgba(99,102,241,.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.logo { position: relative; z-index: 1; }
+
+.logo-placeholder {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 17px;
+  color: #1e40af;
+  letter-spacing: -0.6px;
+  text-decoration: none;
+}
+
+.logo-placeholder svg {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 4px 8px rgba(37,99,235,.3));
+  transition: transform .3s ease;
+}
+.logo-placeholder:hover svg { transform: rotate(-6deg) scale(1.05); }
