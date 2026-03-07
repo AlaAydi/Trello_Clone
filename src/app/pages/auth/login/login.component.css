@@ -1,0 +1,12 @@
+.logo img { height: 36px; width: auto; object-fit: contain; }
+  .logo-placeholder {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 18px;
+    color: #2563eb;
+    letter-spacing: -0.5px;
+  }
+  .logo-placeholder svg { width: 32px; height: 32px; }
