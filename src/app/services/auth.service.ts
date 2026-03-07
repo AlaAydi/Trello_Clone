@@ -33,13 +33,13 @@ export class AuthService {
         );
     }
 
-    signUp(fullName: string, email: string, password: string): Observable<any> {
+    signUp(fullName: string, email: string, password: string, role: string = 'developer'): Observable<any> {
         // Simulating API call
-        return of({ id: '2', email, fullName }).pipe(
+        return of({ id: '2', email, fullName, role }).pipe(
             delay(1500),
             tap(user => {
-                // We don't necessarily log them in immediately after sign-up
-                // but we could. For now let's just simulate the success.
+                this._user = user;
+                localStorage.setItem('trello_user', JSON.stringify(user));
             })
         );
     }

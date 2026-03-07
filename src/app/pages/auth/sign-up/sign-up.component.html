@@ -21,14 +21,28 @@
         <p>Create your account to start managing projects.</p>
       </div>
 
-      <div class="form-body">
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()" class="form-body">
+        <!-- Messages -->
+        <div *ngIf="errorMessage" class="alert alert-error">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          {{ errorMessage }}
+        </div>
+        <div *ngIf="successMessage" class="alert alert-success">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+          {{ successMessage }}
+        </div>
+
         <div class="field">
           <label>Full Name</label>
           <div class="input-wrap">
             <div class="input-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             </div>
-            <input type="text" placeholder="John Doe">
+            <input type="text" formControlName="fullName" placeholder="John Doe">
+          </div>
+          <div *ngIf="signUpForm.get('fullName')?.touched && signUpForm.get('fullName')?.invalid" class="field-error">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            Name is required (min 2 chars)
           </div>
         </div>
 
@@ -38,7 +52,11 @@
             <div class="input-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
-            <input type="email" placeholder="name@company.com">
+            <input type="email" formControlName="email" placeholder="name@company.com">
+          </div>
+          <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.invalid" class="field-error">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            Valid email is required
           </div>
         </div>
 
@@ -48,11 +66,53 @@
             <div class="input-icon">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
             </div>
-            <input type="password" placeholder="••••••••">
+            <input type="password" formControlName="password" placeholder="••••••••">
+          </div>
+          <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.invalid" class="field-error">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>
+            Password min 6 symbols
           </div>
         </div>
 
-        <button class="btn-submit">Sign up</button>
+        <div class="field">
+          <label>Select Your Role</label>
+          <div class="role-grid">
+            <div 
+              class="role-card" 
+              [class.active]="signUpForm.get('role')?.value === 'tech_lead'"
+              (click)="selectRole('tech_lead')"
+            >
+              <div class="role-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              </div>
+              <div class="role-info">
+                <span class="role-name">Tech Lead</span>
+                <span class="role-desc">Manage teams</span>
+              </div>
+              <div class="role-check"></div>
+            </div>
+
+            <div 
+              class="role-card" 
+              [class.active]="signUpForm.get('role')?.value === 'developer'"
+              (click)="selectRole('developer')"
+            >
+              <div class="role-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+              </div>
+              <div class="role-info">
+                <span class="role-name">Developer</span>
+                <span class="role-desc">Write & Ship code</span>
+              </div>
+              <div class="role-check"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="loading" class="btn-submit">
+          <span *ngIf="!loading">Sign up</span>
+          <svg *ngIf="loading" class="spinner" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="4"></circle></svg>
+        </button>
 
         <div class="divider">
           <div class="line"></div>
@@ -61,7 +121,7 @@
         </div>
 
         <div class="social">
-          <button class="btn-social">
+          <button type="button" class="btn-social">
             <svg viewBox="0 0 24 24">
               <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/>
               <path fill="#34A853" d="M16.04 18.013c-1.09.463-2.317.764-3.565.764-1.627 0-3.136-.554-4.282-1.482L4.09 20.449C6.182 22.42 8.945 23.591 12 23.591c4.882 0 9.032-3.232 10.49-7.75l-4.05-3.136c-.545 2.155-2.204 3.864-4.4 5.308z"/>
@@ -70,18 +130,18 @@
             </svg>
             Google
           </button>
-          <button class="btn-social">
+          <button type="button" class="btn-social">
             <svg viewBox="0 0 24 24" class="fb-icon" style="fill:#2563eb">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.791-4.667 4.53-4.667 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>
             Facebook
           </button>
         </div>
-      </div>
+      </form>
     </div>
 
     <div class="footer-link">
-      Already have an account? <a href="#">Log in</a>
+      Already have an account? <a routerLink="/login">Log in</a>
     </div>
   </div>
 
@@ -99,9 +159,11 @@
       </div>
 
       <h2 class="mb-6 text-4xl font-extrabold leading-tight lg:text-5xl" >
-Commencez gratuitement     </h2>
+        Start for free
+      </h2>
       <p class="text-xl font-medium opacity-90">
-Créez votre compte et organisez vos projets comme un pro.      </p>
+        Create your account and organize your projects like a pro.
+      </p>
 
  
     </div>

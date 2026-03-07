@@ -27,8 +27,13 @@ export class SignUpComponent {
     this.signUpForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      role: ['developer', Validators.required]
     });
+  }
+
+  selectRole(role: string) {
+    this.signUpForm.patchValue({ role });
   }
 
   onSubmit() {
@@ -36,9 +41,9 @@ export class SignUpComponent {
       this.loading = true;
       this.errorMessage = '';
       this.successMessage = '';
-      const { fullName, email, password } = this.signUpForm.value;
+      const { fullName, email, password, role } = this.signUpForm.value;
 
-      this.authService.signUp(fullName, email, password).subscribe({
+      this.authService.signUp(fullName, email, password, role).subscribe({
         next: () => {
           this.loading = false;
           this.successMessage = 'Account created successfully! Redirecting to login...';

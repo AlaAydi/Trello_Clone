@@ -1,13 +1,12 @@
-
 .left {
   width: 50%;
   background: #ffffff;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   padding: 32px 72px;
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
+  height: 100%;
 }
 
 .left::before {
@@ -15,12 +14,15 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(37,99,235,.04) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 90% 100%, rgba(99,102,241,.04) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(37, 99, 235, .04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 90% 100%, rgba(99, 102, 241, .04) 0%, transparent 60%);
   pointer-events: none;
 }
 
-.logo { position: relative; z-index: 1; }
+.logo {
+  position: relative;
+  z-index: 1;
+}
 
 .logo-placeholder {
   height: 40px;
@@ -37,7 +39,10 @@
 .logo-placeholder svg {
   width: 34px;
   height: 34px;
-  filter: drop-shadow(0 4px 8px rgba(37,99,235,.3));
+  filter: drop-shadow(0 4px 8px rgba(37, 99, 235, .3));
   transition: transform .3s ease;
 }
-.logo-placeholder:hover svg { transform: rotate(-6deg) scale(1.05); }
+
+.logo-placeholder:hover svg {
+  transform: rotate(-6deg) scale(1.05);
+}
