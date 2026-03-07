@@ -41,7 +41,10 @@ module.exports = {
         "cc-task-list-scrollbar-thumb": "rgba(var(--task-list-scrollbar-thumb))",
         "cc-task-card": "rgba(var(--task-card))",
         "cc-task-drop": "rgba(var(--task-drop))",
-      }
+      },
+      fontFamily: {
+        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+      },
     },
   },
   plugins: [],
