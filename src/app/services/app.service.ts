@@ -71,7 +71,7 @@ export class AppService {
           title: l.name,
           cards: (l.cards || []).map((c: any) => ({
             id: c.id,
-            title: c.name,
+            title: c.title,
             description: c.description,
             listId: l.id,
             position: c.position
@@ -236,7 +236,7 @@ export class AppService {
     return this.http.post<any>(`${this.apiUrl}/cards`, {
       title: card.title,
       description: card.description || '',
-      listId: listId,
+      taskListId: listId,
       position: position
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
