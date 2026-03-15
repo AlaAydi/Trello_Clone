@@ -77,7 +77,7 @@ export default class BoardComponent implements OnInit {
     if (newTitle) {
       let isValid = newTitle.trim().length > 0;
       if (isValid) {
-        this.appService.editBoardTitle(this.workspaceId, this.board.id, newTitle);
+        this.appService.editBoardTitle(this.workspaceId, this.board.id, newTitle).subscribe();
       } else {
         this.boardTitleForm.patchValue({
           title: this.board.title

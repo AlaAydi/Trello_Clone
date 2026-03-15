@@ -29,9 +29,8 @@ export class AuthService {
     login(email: string, password: string): Observable<any> {
         return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
             tap(response => {
-                // The backend returns an auth token, but we might want to store user details.
-                // Assuming response has user or token. Customizing based on backend response layout.
-                const userData = { email, token: response.token }; // Adjust if backend gives different response
+                // The backend returns accessToken
+                const userData = { email, token: response.accessToken }; 
                 this._user = userData;
                 localStorage.setItem('trello_user', JSON.stringify(userData));
             })
@@ -39,14 +38,7 @@ export class AuthService {
     }
 
     signUp(fullName: string, email: string, password: string, role: string = 'developer'): Observable<any> {
-        return this.http.post<any>(`${this.apiUrl}/register`, { fullName, email, password, role }).pipe(
-            tap(response => {
-                // Adjust based on the actual backend response format
-                const userData = { email, fullName, role, token: response.token };
-                this._user = userData;
-                localStorage.setItem('trello_user', JSON.stringify(userData));
-            })
-        );
+        return this.http.post<any>(`${this.apiUrl}/register`, { fullName, email, password, role });
     }
 
     logout() {

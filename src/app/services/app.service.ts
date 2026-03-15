@@ -30,14 +30,24 @@ export class AppService {
   }
 
   refreshData() {
-    // Only refresh if token indicates we might be authenticated (though endpoints check role TECH_LEAD)
-    // For simplicity, we assume we fetch it
     this.http.get<any[]>(`${this.apiUrl}/workspaces`, { headers: this.getHeaders() }).subscribe({
       next: (workspaces) => {
         const mappedWorkspaces = workspaces.map(w => this.mapWorkspace(w));
         const currentData = this.data.value;
         this.data.next({ workspaces: mappedWorkspaces, recent: currentData.recent || [] });
         
+        // Refresh selectedBoard if one is active
+        const currentBoard = this.selectedBoard.value;
+        if (currentBoard) {
+          for (const ws of mappedWorkspaces) {
+            const updatedBoard = ws.boards.find((b: any) => b.id === currentBoard.id);
+            if (updatedBoard) {
+              this.selectedBoard.next(updatedBoard);
+              break;
+            }
+          }
+        }
+
         if (!this.createBoardWorkspace.value && mappedWorkspaces.length > 0) {
           this.createBoardWorkspace.next(mappedWorkspaces[0].id);
         }
@@ -63,7 +73,8 @@ export class AppService {
             id: c.id,
             title: c.name,
             description: c.description,
-            listId: l.id
+            listId: l.id,
+            position: c.position
           }))
         }))
       }))
@@ -134,9 +145,21 @@ export class AppService {
   }
 
   createList(workspaceId: number, boardId: number, list: any) {
+    // Determine position based on current board lists length
+    let position = 0;
+    const workspaces = this.data.value.workspaces;
+    const workspace = workspaces.find((w: any) => w.id == workspaceId);
+    if (workspace) {
+      const board = workspace.boards.find((b: any) => b.id == boardId);
+      if (board && board.lists) {
+        position = board.lists.length;
+      }
+    }
+
     return this.http.post<any>(`${this.apiUrl}/lists`, {
       name: list.title,
-      boardId: boardId
+      boardId: boardId,
+      position: position
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
@@ -200,18 +223,30 @@ export class AppService {
   }
 
   createCard(listId: number, card: any) {
+    // Determine position (simplified, might need better logic if board isn't selectedBoard)
+    let position = 0;
+    const currentBoard = this.selectedBoard.value;
+    if (currentBoard && currentBoard.lists) {
+      const list = currentBoard.lists.find((l: any) => l.id == listId);
+      if (list && list.cards) {
+        position = list.cards.length;
+      }
+    }
+
     return this.http.post<any>(`${this.apiUrl}/cards`, {
-      name: card.title,
+      title: card.title,
       description: card.description || '',
-      listId: listId
+      listId: listId,
+      position: position
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   updateCard(cardId: number, card: any) {
     return this.http.put<any>(`${this.apiUrl}/cards/${cardId}`, {
-      name: card.title,
+      title: card.title,
       description: card.description,
-      listId: card.listId
+      taskListId: card.listId,
+      position: card.position || 0
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
