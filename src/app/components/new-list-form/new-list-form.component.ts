@@ -41,10 +41,12 @@ export class NewListFormComponent {
   });
 
   formFunc() {
-    this.appService.createList(this.workspaceId, this.boardId, this.newListForm.getRawValue());
-    this.newListForm.patchValue({
-      title: '',
-      cards: []
+    this.appService.createList(this.workspaceId, this.boardId, this.newListForm.getRawValue()).subscribe(() => {
+      this.newListForm.patchValue({
+        title: '',
+        cards: []
+      });
+      this.listbuilder = false;
     });
   }
 

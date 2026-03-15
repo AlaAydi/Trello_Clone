@@ -47,15 +47,14 @@ export class CreateWorkspaceModalComponent implements OnInit {
   }
 
   createWorkspace() {
-    let newId = this.createId();
     let iconBg = `workspace-bg-${this.generateIconBg()}`;
     this.newWorkspaceForm.patchValue({
-      id: newId,
       iconBg: iconBg
     });
-    this.closeModal();
-    this.appService.createNewWorkspace(this.newWorkspaceForm.getRawValue());
-    this.router.navigate([`/workspace/${newId}`]);
+    this.appService.createNewWorkspace(this.newWorkspaceForm.getRawValue()).subscribe((newWs: any) => {
+      this.closeModal();
+      this.router.navigate([`/workspace/${newWs.id}`]);
+    });
   }
 
   createId() {

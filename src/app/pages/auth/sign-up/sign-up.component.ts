@@ -46,10 +46,9 @@ export class SignUpComponent {
       this.authService.signUp(fullName, email, password, role).subscribe({
         next: () => {
           this.loading = false;
-          this.successMessage = 'Account created successfully! Redirecting to login...';
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 2000);
+          this.successMessage = 'Compte créé avec succès ! En attente de l\'approbation de l\'administrateur.';
+          alert('Votre inscription a bien été enregistrée. Veuillez patienter jusqu\'à ce qu\'un administrateur approuve votre compte.');
+          this.router.navigate(['/login']);
         },
         error: (err) => {
           this.loading = false;

@@ -35,8 +35,9 @@ export class DeleteWorkspaceComponent {
   }
 
   deleteWorkspace() {
-    this.appService.deleteWorkspace(this.workspace.id);
-    this.router.navigate(['/']);
+    this.appService.deleteWorkspace(this.workspace.id).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   deleteWorkspaceForm = new FormGroup({

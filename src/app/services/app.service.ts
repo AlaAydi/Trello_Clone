@@ -1,27 +1,85 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import data from './../../assets/data/data.json';
+import { Injectable, inject } from '@angular/core';
+import { BehaviorSubject, map, tap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppService {
   
-  data: BehaviorSubject<any> = new BehaviorSubject<any>(data);
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+  private apiUrl = environment.apiUrl;
+
+  data: BehaviorSubject<any> = new BehaviorSubject<any>({ workspaces: [], recent: [] });
   selectedBoard: BehaviorSubject<any> = new BehaviorSubject(undefined);
   openedTask: BehaviorSubject<any> = new BehaviorSubject(undefined);
-  createBoardWorkspace: BehaviorSubject<any> = new BehaviorSubject(data.workspaces[0].id);
+  createBoardWorkspace: BehaviorSubject<any> = new BehaviorSubject(undefined);
+
+  constructor() {
+    this.refreshData();
+  }
+
+  private getHeaders() {
+    const token = this.authService.user?.token;
+    return new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
+
+  refreshData() {
+    // Only refresh if token indicates we might be authenticated (though endpoints check role TECH_LEAD)
+    // For simplicity, we assume we fetch it
+    this.http.get<any[]>(`${this.apiUrl}/workspaces`, { headers: this.getHeaders() }).subscribe({
+      next: (workspaces) => {
+        const mappedWorkspaces = workspaces.map(w => this.mapWorkspace(w));
+        const currentData = this.data.value;
+        this.data.next({ workspaces: mappedWorkspaces, recent: currentData.recent || [] });
+        
+        if (!this.createBoardWorkspace.value && mappedWorkspaces.length > 0) {
+          this.createBoardWorkspace.next(mappedWorkspaces[0].id);
+        }
+      },
+      error: (err) => console.error("Error refreshing data", err)
+    });
+  }
+
+  private mapWorkspace(w: any): any {
+    return {
+      id: w.id,
+      title: w.name,
+      description: w.description,
+      iconBg: 'workspace-bg-1',
+      boards: (w.boards || []).map((b: any) => ({
+        id: b.id,
+        title: b.name,
+        background: 'board-bg-new',
+        lists: (b.lists || []).map((l: any) => ({
+          id: l.id,
+          title: l.name,
+          cards: (l.cards || []).map((c: any) => ({
+            id: c.id,
+            title: c.name,
+            description: c.description,
+            listId: l.id
+          }))
+        }))
+      }))
+    };
+  }
 
   getData() {
     return this.data.asObservable();
   }
 
   getWorkspace(id: string) {
-    let workspace: BehaviorSubject<any> = new BehaviorSubject(data.workspaces.find((workspace: any) => workspace.id == id));
-    return workspace.asObservable();
+    return this.data.pipe(map(d => d.workspaces.find((w: any) => w.id == id)));
   }
 
   setBoard(workspaceId: string, boardId: string) {
+    const data = this.data.value;
     const workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
     if (workspace) {
       const board = workspace.boards.find((board: any) => board.id == boardId);
@@ -35,9 +93,10 @@ export class AppService {
 
   getBoardById(workspaceId: number, boardId: number) {
     let boardSubject: BehaviorSubject<any> = new BehaviorSubject(undefined);
+    const data = this.data.value;
     const workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
     if (workspace) {
-      const board = workspace.boards.find((board: any) => board.id == boardId);
+      const board = workspace.boards?.find((board: any) => board.id == boardId);
       if (board) {
         boardSubject.next(board);
       }
@@ -46,14 +105,20 @@ export class AppService {
   }
 
   createNewWorkspace(newWorkspace: any) {
-    data.workspaces.push(newWorkspace);
+    return this.http.post<any>(`${this.apiUrl}/workspaces`, {
+      name: newWorkspace.title,
+      description: newWorkspace.description
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   setCreateBoardWorkspace(workspaceId?: number) {
     if (workspaceId) {
       this.createBoardWorkspace.next(workspaceId);
     } else {
-      this.createBoardWorkspace.next(data.workspaces[0].id);
+      const workspaces = this.data.value.workspaces;
+      if (workspaces && workspaces.length > 0) {
+        this.createBoardWorkspace.next(workspaces[0].id);
+      }
     }
   }
   
@@ -62,23 +127,22 @@ export class AppService {
   }
 
   createNewBoard(workspaceId: number, newBoard: any) {
-    let workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
-    workspace?.boards.push(newBoard);
+    return this.http.post<any>(`${this.apiUrl}/boards`, {
+      name: newBoard.title,
+      workspaceId: workspaceId
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   createList(workspaceId: number, boardId: number, list: any) {
-    let workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
-    if (workspace) {
-      let board = workspace!.boards.find((board: any) => board.id == boardId);
-      if (board) {
-        board.lists.push(list);
-      }
-    }
+    return this.http.post<any>(`${this.apiUrl}/lists`, {
+      name: list.title,
+      boardId: boardId
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   checkRecentBoards(workspaceId: number, boardId: number) {
-    let recentBoard: any = data.recent.find((board: any) => board.workspaceId == workspaceId && board.boardId == boardId);
-    let index = data.recent.indexOf(recentBoard);
+    let recentBoard: any = this.data.value.recent.find((board: any) => board.workspaceId == workspaceId && board.boardId == boardId);
+    let index = this.data.value.recent.indexOf(recentBoard);
 
     let board: any;
     this.getBoardById(workspaceId, boardId).subscribe({
@@ -92,58 +156,39 @@ export class AppService {
 
     if (board) {
       if (index !== -1) {
-        data.recent.unshift(data.recent.splice(index, 1)[0]);
+        this.data.value.recent.unshift(this.data.value.recent.splice(index, 1)[0]);
       } else {
-        data.recent.unshift(actBoard);
-        if (data.recent.length > 4) {
-          data.recent.pop();
+        this.data.value.recent.unshift(actBoard);
+        if (this.data.value.recent.length > 4) {
+          this.data.value.recent.pop();
         }
       }
+      this.data.next({ ...this.data.value });
     }
   }
 
   deleteWorkspace(workspaceId: number) {
-    const index = data.workspaces.findIndex((item: any) => item.id == workspaceId);
-    if (index !== -1) {
-      data.workspaces.splice(index, 1);
-    }
-
-    let filteredRecents = data.recent.filter((item: any) => item.workspaceId != workspaceId);
-    data.recent = filteredRecents;
+    return this.http.delete(`${this.apiUrl}/workspaces/${workspaceId}`, { headers: this.getHeaders() })
+      .pipe(tap(() => this.refreshData()));
   }
 
   editWorkspaceInfo(title: string, description: string, workspaceId: number) {
-    let workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
-    if (workspace) {
-      workspace.title = title;
-      workspace.description = description;
-    }
+    return this.http.put(`${this.apiUrl}/workspaces/${workspaceId}`, {
+      name: title,
+      description: description
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   editBoardTitle(workspaceId: number, boardId: number, boardTitle: string) {
-    const workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
-    if (workspace) {
-      let board = workspace.boards.find((board: any) => board.id == boardId);
-      if (board) {
-        board.title = boardTitle;
-      }
-    }
+    return this.http.put(`${this.apiUrl}/boards/${boardId}`, {
+      name: boardTitle,
+      workspaceId: workspaceId
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
-  closeBoard(workspaceId: number, boardId: number,) {
-    const workspace = data.workspaces.find((workspace: any) => workspace.id == workspaceId);
-    if (workspace) {
-      let index = workspace.boards.findIndex((board: any) => board.id == boardId);
-      if (index !== -1) {
-        workspace.boards.splice(index, 1);
-      }
-    }
-
-    let recentBoard: any = data.recent.find((board: any) => board.workspaceId == workspaceId && board.boardId == boardId);
-    if (recentBoard) {
-      let index = data.recent.indexOf(recentBoard);
-      data.recent.splice(index, 1);
-    }
+  closeBoard(workspaceId: number, boardId: number) {
+    return this.http.delete(`${this.apiUrl}/boards/${boardId}`, { headers: this.getHeaders() })
+      .pipe(tap(() => this.refreshData()));
   }
 
   setOpenedTask(task: any) {
@@ -154,8 +199,27 @@ export class AppService {
     return this.openedTask.asObservable();
   }
 
+  createCard(listId: number, card: any) {
+    return this.http.post<any>(`${this.apiUrl}/cards`, {
+      name: card.title,
+      description: card.description || '',
+      listId: listId
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
+  }
+
+  updateCard(cardId: number, card: any) {
+    return this.http.put<any>(`${this.apiUrl}/cards/${cardId}`, {
+      name: card.title,
+      description: card.description,
+      listId: card.listId
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
+  }
+
   deleteTask(taskList: any, taskIndex: number) {
-    taskList.cards.splice(taskIndex, 1);
+    // Assuming taskIndex isn't an ID but the position in array
+    const cardId = taskList.cards[taskIndex].id;
+    return this.http.delete(`${this.apiUrl}/cards/${cardId}`, { headers: this.getHeaders() })
+      .pipe(tap(() => this.refreshData()));
   }
 
 }

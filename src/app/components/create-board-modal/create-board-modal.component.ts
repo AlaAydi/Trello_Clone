@@ -76,17 +76,14 @@ export class CreateBoardModalComponent implements OnInit {
       base: background.base,
       background: background.class,
     });
+    
   }
 
   createBoard() {
-    let newId: number = this.createId();
-    this.newBoardForm.patchValue({
-      id: newId,
-      lists: []
+    this.appService.createNewBoard(this.createBoardWorkspace, this.newBoardForm.getRawValue()).subscribe((res: any) => {
+      this.closeModal();
+      this.router.navigate([`/board/${this.createBoardWorkspace}/${res.id}`]);
     });
-    this.appService.createNewBoard(this.createBoardWorkspace, this.newBoardForm.getRawValue());
-    this.closeModal();
-    this.router.navigate([`/board/${this.createBoardWorkspace}/${newId}`]);
   }
 
   createId() {

@@ -52,27 +52,26 @@ export class TaskModalComponent implements OnInit {
 
   updateTask() {
     let newTitle = this.updateTaskForm.getRawValue().title;
-    if (newTitle) {
-      let isValid = newTitle.trim().length > 0;
-      if (isValid) {
-        this.task.title = newTitle;
-      } else {
-        this.updateTaskForm.patchValue({
-          title: this.task.title
-        });
-      }
-    } else {
-      this.updateTaskForm.patchValue({
-        title: this.task.title
-      });
+    let newDesc = this.updateTaskForm.getRawValue().description;
+    
+    let updatedCard = { ...this.task };
+    if (newTitle && newTitle.trim().length > 0) {
+      updatedCard.title = newTitle;
     }
     if (this.updateTaskForm.get('description')?.valid) {
-      this.task.description = this.updateTaskForm.getRawValue().description;
+      updatedCard.description = newDesc;
     }
+    
+    this.appService.updateCard(this.task.id, updatedCard).subscribe(() => {
+      // Background logic from AppService handles mapping the response data
+      // So no local mutation needed here.
+    });
   }
 
   deleteTask() {
-    this.appService.deleteTask(this.taskList, this.taskIndex);
+    this.appService.deleteTask(this.taskList, this.taskIndex).subscribe(() => {
+      this.closeModal();
+    });
   }
 
   closeModal() {

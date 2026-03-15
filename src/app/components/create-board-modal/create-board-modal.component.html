@@ -52,7 +52,7 @@
           <div #workspaceList class="flex flex-col gap-2">
             <button type="button" (click)="workspacesList = !workspacesList"
               class="{{workspacesList? 'border-cc-accent' : 'border-cc-border/40'}} text-sm font-semibold py-[6px] hover:bg-cc-surface rounded bg-cc-base outline-none px-2 border-2 focus:border-cc-accent flex justify-between items-center gap-2">
-              <span class="truncate w-full text-start">{{(createBoardWorkspace | workspaceData).title}}</span>
+              <span class="truncate w-full text-start">{{(createBoardWorkspace | workspaceData)?.title}}</span>
               <app-chevron-icon dimensions="size-3"></app-chevron-icon>
             </button>
             @if (workspacesList) {
@@ -64,14 +64,14 @@
             </div>
             }
           </div>
-          @if ((createBoardWorkspace | workspaceData).boards.length == 5) {
+          @if ((createBoardWorkspace | workspaceData)?.boards?.length == 5) {
           <p class="text-sm font-semibold text-cc-danger-red">This Workspace has reached the maximum number of boards.</p>
           }
         </div>
         }
         <button
-          [disabled]="newBoardForm.invalid || (createBoardWorkspace | workspaceData).boards.length == 5"
-          class="{{newBoardForm.invalid || (createBoardWorkspace | workspaceData).boards.length == 5? 'bg-cc-overlay cursor-not-allowed' : 'bg-cc-accent hover:bg-cc-accent-highlight'}} rounded text-cc-base py-2 text-sm font-medium"
+          [disabled]="newBoardForm.invalid || (createBoardWorkspace | workspaceData)?.boards?.length == 5"
+          class="{{newBoardForm.invalid || (createBoardWorkspace | workspaceData)?.boards?.length == 5? 'bg-cc-overlay cursor-not-allowed' : 'bg-cc-accent hover:bg-cc-accent-highlight'}} rounded text-cc-base py-2 text-sm font-medium"
           type="submit">Create</button>
       </form>
     </div>

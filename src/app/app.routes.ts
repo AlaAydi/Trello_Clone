@@ -16,7 +16,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./pages/home/home.component'),
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -37,7 +37,7 @@ export const routes: Routes = [
   {
     path: 'board/:workspace-id/:board-id',
     loadComponent: () => import('./pages/board/board.component'),
-    canActivate: [authGuard]
+    //canActivate: [authGuard]
   },
   {
     path: '**',

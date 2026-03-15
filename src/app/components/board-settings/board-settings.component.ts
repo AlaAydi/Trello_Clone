@@ -54,8 +54,9 @@ export class BoardSettingsComponent implements OnInit {
   }
 
   closeBoard() {
-    this.appService.closeBoard(this.workspace.id, this.board.id);
-    this.router.navigate(['/']);
+    this.appService.closeBoard(this.workspace.id, this.board.id).subscribe(() => {
+      this.router.navigate(['/']);
+    });
   }
 
 }

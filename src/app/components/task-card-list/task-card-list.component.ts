@@ -3,6 +3,7 @@ import { PlusIconComponent } from "../../icons/plus-icon/plus-icon.component";
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { XmarkIconComponent } from "../../icons/xmark-icon/xmark-icon.component";
 import { BoardService } from '../../services/board.service';
+import { AppService } from '../../services/app.service';
 
 @Component({
     selector: 'app-task-card-list',
@@ -21,6 +22,7 @@ export class TaskCardListComponent {
 
   @Input({ required: true }) list: any;
   @Input({ required: true }) listIndex: number = -1;
+  appService = inject(AppService);
   boardService = inject(BoardService);
   buildTask: boolean = false;
 
@@ -44,9 +46,12 @@ export class TaskCardListComponent {
   }
 
   createTask(taskList: any) {
-    taskList.cards.push(this.newTaskForm.getRawValue());
-    this.newTaskForm.patchValue({
-      title: '',
+    let cardData = this.newTaskForm.getRawValue();
+    this.appService.createCard(taskList.id, cardData).subscribe(() => {
+      this.newTaskForm.patchValue({
+        title: '',
+        description: ''
+      } as any);
     });
   }
 

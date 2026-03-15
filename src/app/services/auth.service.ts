@@ -1,11 +1,15 @@
-import { Injectable } from '@angular/core';
-import { delay, of, Observable, tap } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
+    private http = inject(HttpClient);
     private _user: any = null;
+    private apiUrl = environment.apiUrl + '/auth';
 
     constructor() {
         const savedUser = localStorage.getItem('trello_user');
@@ -23,23 +27,24 @@ export class AuthService {
     }
 
     login(email: string, password: string): Observable<any> {
-        // Simulating API call
-        return of({ id: '1', email, fullName: 'Demo User' }).pipe(
-            delay(1500),
-            tap(user => {
-                this._user = user;
-                localStorage.setItem('trello_user', JSON.stringify(user));
+        return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
+            tap(response => {
+                // The backend returns an auth token, but we might want to store user details.
+                // Assuming response has user or token. Customizing based on backend response layout.
+                const userData = { email, token: response.token }; // Adjust if backend gives different response
+                this._user = userData;
+                localStorage.setItem('trello_user', JSON.stringify(userData));
             })
         );
     }
 
     signUp(fullName: string, email: string, password: string, role: string = 'developer'): Observable<any> {
-        // Simulating API call
-        return of({ id: '2', email, fullName, role }).pipe(
-            delay(1500),
-            tap(user => {
-                this._user = user;
-                localStorage.setItem('trello_user', JSON.stringify(user));
+        return this.http.post<any>(`${this.apiUrl}/register`, { fullName, email, password, role }).pipe(
+            tap(response => {
+                // Adjust based on the actual backend response format
+                const userData = { email, fullName, role, token: response.token };
+                this._user = userData;
+                localStorage.setItem('trello_user', JSON.stringify(userData));
             })
         );
     }
