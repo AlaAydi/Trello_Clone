@@ -29,8 +29,12 @@ export class AuthService {
     login(email: string, password: string): Observable<any> {
         return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
             tap(response => {
-                // The backend returns accessToken
-                const userData = { email, token: response.accessToken }; 
+                const userData = {
+                    email,
+                    token: response.accessToken,
+                    role: response.role,
+                    fullName: response.fullName
+                };
                 this._user = userData;
                 localStorage.setItem('trello_user', JSON.stringify(userData));
             })

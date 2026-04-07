@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class AppService {
-  
+
   private http = inject(HttpClient);
   private authService = inject(AuthService);
   private apiUrl = environment.apiUrl;
@@ -35,7 +35,7 @@ export class AppService {
         const mappedWorkspaces = workspaces.map(w => this.mapWorkspace(w));
         const currentData = this.data.value;
         this.data.next({ workspaces: mappedWorkspaces, recent: currentData.recent || [] });
-        
+
         // Refresh selectedBoard if one is active
         const currentBoard = this.selectedBoard.value;
         if (currentBoard) {
@@ -74,11 +74,17 @@ export class AppService {
             title: c.title,
             description: c.description,
             listId: l.id,
-            position: c.position
+            position: c.position,
+            assignedToEmail: c.assignedToEmail,
+            assignedToName: c.assignedToName
           }))
         }))
       }))
     };
+  }
+
+  getDevelopers() {
+    return this.http.get<any[]>(`${this.apiUrl}/admin/developers`, { headers: this.getHeaders() });
   }
 
   getData() {
@@ -132,7 +138,7 @@ export class AppService {
       }
     }
   }
-  
+
   getCreateBoardWorkspace() {
     return this.createBoardWorkspace.asObservable();
   }
@@ -160,6 +166,14 @@ export class AppService {
       name: list.title,
       boardId: boardId,
       position: position
+    }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
+  }
+
+  updateList(listId: number, list: any) {
+    return this.http.put<any>(`${this.apiUrl}/lists/${listId}`, {
+      name: list.title || list.name,
+      boardId: list.boardId,
+      position: list.position || 0
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
@@ -223,7 +237,6 @@ export class AppService {
   }
 
   createCard(listId: number, card: any) {
-    // Determine position (simplified, might need better logic if board isn't selectedBoard)
     let position = 0;
     const currentBoard = this.selectedBoard.value;
     if (currentBoard && currentBoard.lists) {
@@ -237,7 +250,8 @@ export class AppService {
       title: card.title,
       description: card.description || '',
       taskListId: listId,
-      position: position
+      position: position,
+      assignedToEmail: card.assignedToEmail
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
@@ -246,12 +260,12 @@ export class AppService {
       title: card.title,
       description: card.description,
       taskListId: card.listId,
-      position: card.position || 0
+      position: card.position || 0,
+      assignedToEmail: card.assignedToEmail
     }, { headers: this.getHeaders() }).pipe(tap(() => this.refreshData()));
   }
 
   deleteTask(taskList: any, taskIndex: number) {
-    // Assuming taskIndex isn't an ID but the position in array
     const cardId = taskList.cards[taskIndex].id;
     return this.http.delete(`${this.apiUrl}/cards/${cardId}`, { headers: this.getHeaders() })
       .pipe(tap(() => this.refreshData()));

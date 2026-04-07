@@ -42,7 +42,13 @@ export class LoginComponent {
         },
         error: (err) => {
           this.loading = false;
-          this.errorMessage = 'Invalid email or password';
+          if (err.error && err.error.message) {
+            this.errorMessage = err.error.message;
+          } else if (err.status === 403) {
+            this.errorMessage = 'Forbidden: Your account might be pending approval.';
+          } else {
+            this.errorMessage = 'Invalid email or password or account not approved.';
+          }
           console.error('Login error', err);
         }
       });

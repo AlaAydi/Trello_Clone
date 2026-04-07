@@ -69,7 +69,18 @@ export class BoardDragdropComponent {
     if (newTitle) {
       let isValid = newTitle.trim().length > 0;
       if (isValid) {
+        const oldTitle = list.title;
         list.title = newTitle.trim();
+        this.appService.updateList(list.id, {
+          title: list.title,
+          boardId: list.boardId || this.board.id,
+          position: list.position || 0
+        }).subscribe({
+          error: (err) => {
+            console.error("Error updating list title", err);
+            list.title = oldTitle; // Rollback on error
+          }
+        });
       }
     }    
   }
@@ -82,9 +93,23 @@ export class BoardDragdropComponent {
       return;
     }
 
-    isSameContainer
-      ? this.boardService.reorderTask(container.data, previousIndex, currentIndex)
-      : this.boardService.transferTask({ fromList: previousContainer.data, toList: container.data, fromIndex: previousIndex, toIndex: currentIndex });
+    if (isSameContainer) {
+      this.boardService.reorderTask(container.data, previousIndex, currentIndex);
+    } else {
+      this.boardService.transferTask({ fromList: previousContainer.data, toList: container.data, fromIndex: previousIndex, toIndex: currentIndex });
+    }
+
+    // Persist to backend
+    const movedTask = container.data.cards[currentIndex];
+    this.appService.updateCard(movedTask.id, {
+      title: movedTask.title,
+      description: movedTask.description,
+      listId: container.data.id,
+      position: currentIndex,
+      assignedToEmail: movedTask.assignedToEmail
+    }).subscribe({
+      error: (err) => console.error("Error persisting task move", err)
+    });
   }
 
   moveList(event: CdkDragDrop<any>) {
@@ -93,6 +118,16 @@ export class BoardDragdropComponent {
       return;
     }
     this.boardService.moveList(this.board, previousIndex, currentIndex);
+
+    // Persist to backend
+    const movedList = this.board.lists[currentIndex];
+    this.appService.updateList(movedList.id, {
+      title: movedList.title,
+      boardId: this.board.id,
+      position: currentIndex
+    }).subscribe({
+      error: (err) => console.error("Error persisting list move", err)
+    });
   }
 
   setOpenedTask(task: any, taskList: any, taskIndex: any) {

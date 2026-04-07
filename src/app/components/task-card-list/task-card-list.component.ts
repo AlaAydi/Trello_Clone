@@ -4,6 +4,8 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { XmarkIconComponent } from "../../icons/xmark-icon/xmark-icon.component";
 import { BoardService } from '../../services/board.service';
 import { AppService } from '../../services/app.service';
+import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-task-card-list',
@@ -15,7 +17,8 @@ import { AppService } from '../../services/app.service';
         PlusIconComponent,
         FormsModule,
         ReactiveFormsModule,
-        XmarkIconComponent
+        XmarkIconComponent,
+        CommonModule
     ]
 })
 export class TaskCardListComponent {
@@ -24,6 +27,7 @@ export class TaskCardListComponent {
   @Input({ required: true }) listIndex: number = -1;
   appService = inject(AppService);
   boardService = inject(BoardService);
+  authService = inject(AuthService);
   buildTask: boolean = false;
 
   @ViewChild('taskBuilder') menux!: ElementRef;

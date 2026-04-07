@@ -15,7 +15,7 @@
           </button>
         </div>
       </form>
-      <button (click)="showTaskBuilder()"
+      <button *ngIf="authService.user?.role === 'TECH_LEAD'" (click)="showTaskBuilder()"
         class="{{buildTask? 'hidden' : 'flex'}} w-full py-2 px-3 text-start text-cc-subtle hover:bg-cc-task-list-btn rounded-lg gap-2 items-center">
         <app-plus-icon dimensions="size-3"></app-plus-icon>
         Add a card

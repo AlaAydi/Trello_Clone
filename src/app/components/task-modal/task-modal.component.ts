@@ -7,6 +7,7 @@ import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } 
 import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
 import { TrashIconComponent } from "../../icons/trash-icon/trash-icon.component";
 import { BoardService } from '../../services/board.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-task-modal',
@@ -28,12 +29,15 @@ export class TaskModalComponent implements OnInit {
   @Input({required: true}) taskList: any;
   @Input({ required: true }) taskIndex: any;
   task: any;
+  developers: any[] = [];
   appService = inject(AppService);
   boardService = inject(BoardService);
+  authService = inject(AuthService);
 
   updateTaskForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
-    description: new FormControl('', Validators.pattern(/^(\s*\S+\s*)*(?!\s).*$/m))
+    description: new FormControl('', Validators.pattern(/^(\s*\S+\s*)*(?!\s).*$/m)),
+    assignedToEmail: new FormControl('')
   });
 
   ngOnInit(): void {
@@ -43,28 +47,44 @@ export class TaskModalComponent implements OnInit {
         if (res) { 
           this.updateTaskForm.patchValue({
             title: this.task.title,
-            description: this.task.description
+            description: this.task.description,
+            assignedToEmail: this.task.assignedToEmail || ''
           });
+          
+          if (this.authService.user?.role === 'DEVELOPER') {
+            this.updateTaskForm.disable();
+          }
         }
       }
+    });
+
+    if (this.authService.user?.role === 'TECH_LEAD') {
+      this.loadDevelopers();
+    }
+  }
+
+  loadDevelopers() {
+    this.appService.getDevelopers().subscribe(devs => {
+      this.developers = devs;
     });
   }
 
   updateTask() {
-    let newTitle = this.updateTaskForm.getRawValue().title;
-    let newDesc = this.updateTaskForm.getRawValue().description;
+    if (this.authService.user?.role === 'DEVELOPER') return;
+
+    let formValue = this.updateTaskForm.getRawValue();
+    let newTitle = formValue.title;
+    let newDesc = formValue.description;
+    let newAssigned = formValue.assignedToEmail;
     
-    let updatedCard = { ...this.task };
-    if (newTitle && newTitle.trim().length > 0) {
-      updatedCard.title = newTitle;
-    }
-    if (this.updateTaskForm.get('description')?.valid) {
-      updatedCard.description = newDesc;
-    }
+    let updatedCard = { 
+      ...this.task,
+      title: newTitle,
+      description: newDesc,
+      assignedToEmail: newAssigned
+    };
     
     this.appService.updateCard(this.task.id, updatedCard).subscribe(() => {
-      // Background logic from AppService handles mapping the response data
-      // So no local mutation needed here.
     });
   }
 

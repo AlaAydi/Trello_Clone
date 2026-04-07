@@ -8,6 +8,12 @@
           <app-xmark-icon dimensions="size-4"></app-xmark-icon>
         </button>
       </div>
+
+      <!-- Assignment Status -->
+      <div *ngIf="task.assignedToName" class="ms-10 flex items-center gap-2 text-sm text-cc-subtle">
+        <span class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full font-medium">Assigned to: {{ task.assignedToName }}</span>
+      </div>
+
       <div class="flex flex-col md:flex-row w-full gap-4">
         <div class="flex flex-col gap-3 w-full">
           <div class="flex items-center gap-1">
@@ -20,8 +26,18 @@
         </div>
         <div class="max-w-[168px] w-full flex flex-col gap-2 text-sm">
           <p class="text-xs font-semibold text-cc-subtle">Actions</p>
-          <button aria-label="Delete task" type="button" (click)="deleteTask(); closeModal()" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 flex items-center gap-2 rounded font-medium">
-            <app-trash-icon dimensions="size-3 text-cc-subtle"></app-trash-icon>
+          
+          <!-- Assignment Dropdown for Tech Lead -->
+          <div *ngIf="authService.user?.role === 'TECH_LEAD'" class="flex flex-col gap-1 mb-2">
+            <label class="text-[10px] uppercase font-bold text-cc-subtle px-1">Assign to</label>
+            <select (change)="updateTask()" formControlName="assignedToEmail" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 rounded font-medium outline-none border-none">
+              <option value="">Unassigned</option>
+              <option *ngFor="let dev of developers" [value]="dev.email">{{ dev.fullName }}</option>
+            </select>
+          </div>
+
+          <button *ngIf="authService.user?.role === 'TECH_LEAD'" aria-label="Delete task" type="button" (click)="deleteTask(); closeModal()" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 flex items-center gap-2 rounded font-medium text-red-400">
+            <app-trash-icon dimensions="size-3 text-red-400"></app-trash-icon>
             Delete
           </button>
         </div>
