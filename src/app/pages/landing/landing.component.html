@@ -1,0 +1,242 @@
+<div class="relative min-h-screen bg-slate-950 overflow-hidden font-sans text-slate-200">
+  <!-- Glowing Background Orbs representing AI theme -->
+  <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/30 rounded-full blur-[100px] animate-pulseGlow pointer-events-none"></div>
+  <div class="absolute bottom-1/4 right-1/4 w-[28rem] h-[28rem] bg-cyan-600/30 rounded-full blur-[120px] animate-pulseGlow pointer-events-none" style="animation-delay: 2s;"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-600/20 rounded-full blur-[90px] pointer-events-none"></div>
+
+  <!-- Navbar -->
+  <nav class="relative z-10 w-full p-6 flex justify-between items-center max-w-7xl mx-auto">
+    <div class="flex items-center gap-3">
+      <!-- AI Logo Representation -->
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30 animate-float">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+      </div>
+      <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">TrelloAI</span>
+    </div>
+    <div class="flex gap-4">
+      <a routerLink="/login" class="px-6 py-2.5 rounded-full text-sm font-semibold text-slate-300 hover:text-white transition-colors duration-300">Se connecter</a>
+      <a routerLink="/registre" class="px-6 py-2.5 rounded-full text-sm font-semibold bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-105">S'inscrire</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main class="relative z-10 flex flex-col items-center justify-center text-center mt-24 px-4 max-w-5xl mx-auto">
+    <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+      Orchestrez vos projets avec <br/>
+      <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600">l'Intelligence Artificielle</span>
+    </h1>
+    
+    <p class="text-lg md:text-xl text-slate-400 mb-12 max-w-2xl font-light">
+      Profitez d'une analyse prédictive et d'une interface fluide pour transformer vos idées en actions concrètes. Rejoignez le futur de la productivité.
+    </p>
+
+    <!-- Call to Actions -->
+    <div class="flex flex-col sm:flex-row gap-6 mb-24">
+      <a routerLink="/registre" class="group relative px-8 py-4 rounded-full font-bold text-white bg-gradient-to-r from-cyan-500 to-purple-600 shadow-[0_0_40px_rgba(168,85,247,0.4)] hover:shadow-[0_0_60px_rgba(168,85,247,0.6)] transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+        <div class="absolute inset-0 w-full h-full bg-white opacity-0 group-hover:opacity-20 transition-opacity"></div>
+        Commencer l'expérience
+      </a>
+      <a routerLink="/login" class="px-8 py-4 rounded-full font-bold text-slate-300 bg-white/5 border border-white/10 hover:bg-white/10 backdrop-blur-lg hover:text-white transition-all duration-300">
+        J'ai déjà un compte
+      </a>
+    </div>
+
+    <!-- AI Features Carousel/Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl mt-10">
+      
+      <!-- Card 1 -->
+      <div class="group p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 text-left">
+        <div class="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center mb-6 shadow-inner border border-cyan-500/30">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-200 mb-3">Analyse Intelligente</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Suggère des optimisations et évalue la charge de travail de votre équipe en temps réel.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="group p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 text-left">
+        <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center mb-6 shadow-inner border border-purple-500/30">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-200 mb-3">Planification Prédictive</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Estime automatiquement la date d'achèvement de vos listes selon votre vélocité historique.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] backdrop-blur-xl transition-all duration-300 hover:-translate-y-2 text-left">
+        <div class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mb-6 shadow-inner border border-blue-500/30">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"></path></svg>
+        </div>
+        <h3 class="text-xl font-bold text-slate-200 mb-3">Réseau Connecté</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">Assignez les tâches dynamiquement grâce à une cartographie parfaite de vos projets.</p>
+      </div>
+      
+    </div>
+
+    <!-- New: Detailed Services Section -->
+    <section class="mt-32 w-full max-w-7xl px-4">
+      <div class="text-center mb-20">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow-cyan">Nos Services <span class="text-cyan-400">Premium</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Conçus pour les équipes qui exigent l'excellence. Redéfinissez votre façon de travailler avec nos outils de pointe.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Service 1 -->
+        <div class="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-500 group">
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">Gestion Agile</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Tableaux Kanban dynamiques, sprints personnalisables et gestion des priorités simplifiée.</p>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 hover:border-purple-500/30 transition-all duration-500 group">
+          <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">Moteur AI</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Automatisez les rappels, générez des résumés de tâches et prévoyez les goulots d'étranglement.</p>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 hover:border-blue-500/30 transition-all duration-500 group">
+          <div class="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">Collaboration Sync</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Modifications en temps réel, commentaires riches et notifications intelligentes pour rester aligné.</p>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="p-8 rounded-3xl bg-gradient-to-b from-white/[0.05] to-transparent border border-white/10 hover:border-cyan-500/30 transition-all duration-500 group">
+          <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">Analyses Data</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Visualisez la performance de votre équipe avec des tableaux de bord interactifs et détaillés.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- New: Testimonials Section -->
+    <section class="mt-32 w-full max-w-7xl px-4">
+      <div class="text-center mb-20">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6 text-glow-purple">Ce que disent nos <span class="text-purple-400">utilisateurs</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Rejoignez des milliers de professionnels qui ont déjà transformé leur productivité.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div class="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all duration-300 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 7.34315 11.3601 6 13.017 6H16.017C18.2261 6 20.017 7.79086 20.017 10V15C20.017 17.2091 18.2261 19 16.017 19H14.017V21ZM5.017 21L5.017 18C5.017 16.8954 5.91243 16 7.017 16H10.017C10.5693 16 11.017 15.5523 11.017 15V9C11.017 8.44772 10.5693 8 10.017 8H7.017C6.46472 8 6.017 8.44772 6.017 9V12C6.017 12.5523 5.56933 13 5.017 13H2.017C1.46472 13 1.017 12.5523 1.017 12V9C1.017 7.34315 2.36014 6 4.017 6H7.017C9.22614 6 11.017 7.79086 11.017 10V15C11.017 17.2091 9.22614 19 7.017 19H5.017V21Z"></path></svg>
+          </div>
+          <p class="text-slate-300 italic mb-8 relative z-10">"TrelloAI a radicalement changé notre façon de gérer les sorties produits. L'analyse prédictive est un véritable game-changer pour nous."</p>
+          <div class="flex items-center gap-4 relative z-10">
+            <img src="assets/avatar_sarah.png" alt="Sarah L." class="w-12 h-12 rounded-full border-2 border-purple-500/30 object-cover">
+            <div>
+              <h4 class="font-bold text-white">Sarah L.</h4>
+              <p class="text-xs text-slate-500 uppercase tracking-widest">Product Manager</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all duration-300 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 7.34315 11.3601 6 13.017 6H16.017C18.2261 6 20.017 7.79086 20.017 10V15C20.017 17.2091 18.2261 19 16.017 19H14.017V21ZM5.017 21L5.017 18C5.017 16.8954 5.91243 16 7.017 16H10.017C10.5693 16 11.017 15.5523 11.017 15V9C11.017 8.44772 10.5693 8 10.017 8H7.017C6.46472 8 6.017 8.44772 6.017 9V12C6.017 12.5523 5.56933 13 5.017 13H2.017C1.46472 13 1.017 12.5523 1.017 12V9C1.017 7.34315 2.36014 6 4.017 6H7.017C9.22614 6 11.017 7.79086 11.017 10V15C11.017 17.2091 9.22614 19 7.017 19H5.017V21Z"></path></svg>
+          </div>
+          <p class="text-slate-300 italic mb-8 relative z-10">"L'intégration AI est bluffante. Elle nous permet de nous concentrer sur le code plutôt que sur l'organisation complexe de nos tâches quotidiennes."</p>
+          <div class="flex items-center gap-4 relative z-10">
+            <img src="assets/avatar_marc.png" alt="Marc D." class="w-12 h-12 rounded-full border-2 border-cyan-500/30 object-cover">
+            <div>
+              <h4 class="font-bold text-white">Marc D.</h4>
+              <p class="text-xs text-slate-500 uppercase tracking-widest">Lead Developer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="p-8 rounded-3xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] transition-all duration-300 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 7.34315 11.3601 6 13.017 6H16.017C18.2261 6 20.017 7.79086 20.017 10V15C20.017 17.2091 18.2261 19 16.017 19H14.017V21ZM5.017 21L5.017 18C5.017 16.8954 5.91243 16 7.017 16H10.017C10.5693 16 11.017 15.5523 11.017 15V9C11.017 8.44772 10.5693 8 10.017 8H7.017C6.46472 8 6.017 8.44772 6.017 9V12C6.017 12.5523 5.56933 13 5.017 13H2.017C1.46472 13 1.017 12.5523 1.017 12V9C1.017 7.34315 2.36014 6 4.017 6H7.017C9.22614 6 11.017 7.79086 11.017 10V15C11.017 17.2091 9.22614 19 7.017 19H5.017V21Z"></path></svg>
+          </div>
+          <p class="text-slate-300 italic mb-8 relative z-10">"Interface magnifique et fluide. C'est de loin le meilleur outil de gestion de projet que j'ai eu l'occasion d'utiliser dans ma carrière."</p>
+          <div class="flex items-center gap-4 relative z-10">
+            <img src="assets/avatar_elena.png" alt="Elena R." class="w-12 h-12 rounded-full border-2 border-blue-500/30 object-cover">
+            <div>
+              <h4 class="font-bold text-white">Elena R.</h4>
+              <p class="text-xs text-slate-500 uppercase tracking-widest">Freelance Designer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- New: Footer Section -->
+    <footer class="mt-40 w-full bg-white/[0.02] border-t border-white/5 py-20 px-4">
+      <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <!-- Brand -->
+        <div class="col-span-1 md:col-span-1">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">TrelloAI</span>
+          </div>
+          <p class="text-slate-500 text-sm leading-relaxed mb-6">
+            L'intelligence artificielle au service de votre productivité. Orchestrez vos projets comme jamais auparavant.
+          </p>
+          <div class="flex gap-4">
+            <a href="#" class="text-slate-400 hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.046 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a>
+            <a href="#" class="text-slate-400 hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.298 24 12c0-6.627-5.373-12-12-12z"/></svg></a>
+            <a href="#" class="text-slate-400 hover:text-white transition-colors"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+          </div>
+        </div>
+
+        <!-- Links 1 -->
+        <div>
+          <h4 class="text-white font-bold mb-6">Produit</h4>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-slate-500 hover:text-cyan-400 transition-colors text-sm">Fonctionnalités</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-cyan-400 transition-colors text-sm">Tarifs</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-cyan-400 transition-colors text-sm">Intégrations</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-cyan-400 transition-colors text-sm">Sécurité</a></li>
+          </ul>
+        </div>
+
+        <!-- Links 2 -->
+        <div>
+          <h4 class="text-white font-bold mb-6">Ressources</h4>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-slate-500 hover:text-purple-400 transition-colors text-sm">Documentation</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-purple-400 transition-colors text-sm">Blog</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-purple-400 transition-colors text-sm">Support</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-purple-400 transition-colors text-sm">API</a></li>
+          </ul>
+        </div>
+
+        <!-- Links 3 -->
+        <div>
+          <h4 class="text-white font-bold mb-6">Société</h4>
+          <ul class="space-y-4">
+            <li><a href="#" class="text-slate-500 hover:text-blue-400 transition-colors text-sm">À propos</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-blue-400 transition-colors text-sm">Carrières</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-blue-400 transition-colors text-sm">Contact</a></li>
+            <li><a href="#" class="text-slate-500 hover:text-blue-400 transition-colors text-sm">Légal</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p class="text-slate-600 text-xs">© 2026 TrelloAI Inc. Tous droits réservés.</p>
+        <div class="flex gap-8">
+          <a href="#" class="text-slate-600 hover:text-white transition-colors text-xs">Confidentialité</a>
+          <a href="#" class="text-slate-600 hover:text-white transition-colors text-xs">Conditions</a>
+          <a href="#" class="text-slate-600 hover:text-white transition-colors text-xs">Cookies</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>

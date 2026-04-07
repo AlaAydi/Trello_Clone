@@ -1,0 +1,43 @@
+
+> trello-clone@0.0.0 build
+> ng build
+
+- Building...
+
+Initial chunk files   | Names               |  Raw size | Estimated transfer size
+chunk-BGEZK4XN.js     | -                   | 255.97 kB |                68.56 kB
+styles-W35ON2KH.css   | styles              |  49.00 kB |                 7.28 kB
+chunk-2XHB5AUR.js     | -                   |  48.96 kB |                10.88 kB
+chunk-DVBF6PBV.js     | -                   |  44.80 kB |                 9.72 kB
+chunk-V57A2YQY.js     | -                   |  34.37 kB |                 7.26 kB
+polyfills-FFHMD2TL.js | polyfills           |  33.71 kB |                11.02 kB
+main-BBV2OUNT.js      | main                |  11.99 kB |                 3.37 kB
+chunk-I3S4NRWG.js     | -                   |   5.73 kB |                 1.65 kB
+chunk-HQSRIJHO.js     | -                   |   2.13 kB |               738 bytes
+chunk-Y7QZ7UMH.js     | -                   | 947 bytes |               947 bytes
+chunk-DCPXT42N.js     | -                   | 412 bytes |               412 bytes
+
+                      | Initial total       | 488.00 kB |               121.79 kB
+
+Lazy chunk files      | Names               |  Raw size | Estimated transfer size
+chunk-XOTRE5VJ.js     | board-component     |  90.94 kB |                20.60 kB
+chunk-UTJTF4O6.js     | sign-up-component   |  21.53 kB |                 5.57 kB
+chunk-77E6J64G.js     | login-component     |  10.57 kB |                 3.53 kB
+chunk-33BUSA3M.js     | workspace-component |  10.09 kB |                 3.14 kB
+chunk-ZDTWTAKB.js     | landing-component   |   6.43 kB |                 2.16 kB
+chunk-Z7HP4TWV.js     | boards-component    |   3.19 kB |                 1.27 kB
+chunk-WBRIKYJB.js     | home-component      |   2.82 kB |                 1.16 kB
+chunk-WCZQICHG.js     | -                   |   2.43 kB |               941 bytes
+chunk-KNIHKO6T.js     | -                   | 929 bytes |               929 bytes
+chunk-2EFS7CCV.js     | -                   | 848 bytes |               848 bytes
+
+Output location: C:\Users\Aydi Ala\Desktop\cloneTrello\Trello-Clone\dist\trello-clone
+
+Application bundle generation complete. [10.914 seconds]
+
+▲ [WARNING] 3 rules skipped due to selector errors:
+  .has-\[\:checked\]\:border-l-2:has() -> Empty sub-selector
+  .has-\[\:checked\]\:border-cc-accent:has() -> Empty sub-selector
+  .has-\[\:checked\]\:bg-cc-accent-muted:has() -> Empty sub-selector
+
+

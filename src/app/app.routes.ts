@@ -1,8 +1,16 @@
-import { Routes } from '@angular/router';
+import { Routes, Router } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { inject } from '@angular/core';
+import { AuthService } from './services/auth.service';
 
 export const routes: Routes = [
 
+  {
+    path: '',
+    loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent),
+    canActivate: [() => !inject(AuthService).isLoggedIn ? true : inject(Router).parseUrl('/boards')],
+    pathMatch: 'full'
+  },
   {
     path: 'login',
     loadComponent: () =>
@@ -18,11 +26,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/home/home.component'),
     canActivate: [authGuard],
     children: [
-      {
-        path: '',
-        redirectTo: 'boards',
-        pathMatch: 'full'
-      },
       {
         path: 'boards',
         loadComponent: () => import('./pages/boards/boards.component'),

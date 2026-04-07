@@ -98,6 +98,10 @@ export class TaskModalComponent implements OnInit {
     const selectedDev = this.developers.find(d => d.email === newAssignedEmail);
     const devName = selectedDev ? selectedDev.fullName : 'unassigned';
 
+    // Update local state for immediate UI feedback
+    this.task.assignedToName = devName;
+    this.task.assignedToEmail = newAssignedEmail;
+
     this.updateTask(); // Call existing update logic
     
     // Show confirmation popup
