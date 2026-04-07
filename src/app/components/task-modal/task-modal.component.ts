@@ -88,6 +88,22 @@ export class TaskModalComponent implements OnInit {
     });
   }
 
+  updateTaskWithPopup() {
+    if (this.authService.user?.role === 'DEVELOPER') return;
+
+    let formValue = this.updateTaskForm.getRawValue();
+    let newAssignedEmail = formValue.assignedToEmail;
+    
+    // Find developer name for the popup
+    const selectedDev = this.developers.find(d => d.email === newAssignedEmail);
+    const devName = selectedDev ? selectedDev.fullName : 'unassigned';
+
+    this.updateTask(); // Call existing update logic
+    
+    // Show confirmation popup
+    alert(`Cette tâche a été assignée à : ${devName}`);
+  }
+
   deleteTask() {
     this.appService.deleteTask(this.taskList, this.taskIndex).subscribe(() => {
       this.closeModal();

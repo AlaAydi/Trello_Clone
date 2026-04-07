@@ -30,10 +30,13 @@
           <!-- Assignment Dropdown for Tech Lead -->
           <div *ngIf="authService.user?.role === 'TECH_LEAD'" class="flex flex-col gap-1 mb-2">
             <label class="text-[10px] uppercase font-bold text-cc-subtle px-1">Assign to</label>
-            <select (change)="updateTask()" formControlName="assignedToEmail" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 rounded font-medium outline-none border-none">
+            <select formControlName="assignedToEmail" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 rounded font-medium outline-none border-none mb-1">
               <option value="">Unassigned</option>
               <option *ngFor="let dev of developers" [value]="dev.email">{{ dev.fullName }}</option>
             </select>
+            <button type="button" (click)="updateTaskWithPopup()" class="bg-cc-accent hover:bg-cc-accent/80 text-white w-full py-[6px] px-3 rounded font-medium text-xs mb-2 transition-colors">
+              Assign Task
+            </button>
           </div>
 
           <button *ngIf="authService.user?.role === 'TECH_LEAD'" aria-label="Delete task" type="button" (click)="deleteTask(); closeModal()" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 flex items-center gap-2 rounded font-medium text-red-400">
