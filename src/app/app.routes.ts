@@ -7,10 +7,11 @@ export const routes: Routes = [
 
   {
     path: '',
-    loadComponent: () => import('./pages/landing/landing.component').then(m => m.LandingComponent),
-    canActivate: [() => !inject(AuthService).isLoggedIn ? true : inject(Router).parseUrl('/boards')],
+    loadComponent: () =>
+      import('./pages/landing/landing.component').then(m => m.LandingComponent),
     pathMatch: 'full'
   },
+
   {
     path: 'login',
     loadComponent: () =>
