@@ -4,6 +4,8 @@ import { PlusIconComponent } from "../../icons/plus-icon/plus-icon.component";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AppService } from '../../services/app.service';
 import { BoardService } from '../../services/board.service';
+import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-new-list-form',
@@ -14,7 +16,8 @@ import { BoardService } from '../../services/board.service';
       XmarkIconComponent,
       PlusIconComponent,
       ReactiveFormsModule,
-      FormsModule
+      FormsModule,
+      CommonModule
     ]
 })
 export class NewListFormComponent {
@@ -24,6 +27,7 @@ export class NewListFormComponent {
   @Input({ required: true }) boardId: any;
   appService = inject(AppService);
   boardService = inject(BoardService);
+  authService = inject(AuthService);
   listbuilder: boolean = false;
 
   @ViewChild('newList') menux!: ElementRef;

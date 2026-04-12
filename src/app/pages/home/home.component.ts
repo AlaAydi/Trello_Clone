@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { AppService } from '../../services/app.service';
 import { TrelloIconComponent } from "../../icons/trello-icon/trello-icon.component";
 import { WorkspaceIconComponent } from "../../components/workspace-icon/workspace-icon.component";
@@ -25,6 +26,7 @@ import { NavBarComponent } from '../../components/nav-bar/nav-bar.component';
 export default class HomeComponent implements OnInit {
 
   appService = inject(AppService);
+  authService = inject(AuthService);
   data: any;
 
   ngOnInit(): void {

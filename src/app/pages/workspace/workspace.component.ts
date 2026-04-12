@@ -1,5 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { AppService } from '../../services/app.service';
+import { AuthService } from '../../services/auth.service';
 import { BoardsCardsGridComponent } from "../../components/boards-cards-grid/boards-cards-grid.component";
 import { UserIconComponent } from "../../icons/user-icon/user-icon.component";
 import { WorkspaceIconComponent } from "../../components/workspace-icon/workspace-icon.component";
@@ -29,6 +30,7 @@ export default class WorkspaceComponent {
 
   appService = inject(AppService);
   titleService = inject(Title);
+  authService = inject(AuthService);
   router = inject(Router);
   workspace: any;
   editMode: boolean = false;

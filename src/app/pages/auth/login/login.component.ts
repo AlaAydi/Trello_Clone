@@ -38,7 +38,7 @@ export class LoginComponent {
       this.authService.login(email, password).subscribe({
         next: () => {
           this.loading = false;
-          this.router.navigate(['/boards']);
+          window.location.href = '/boards';
         },
         error: (err) => {
           this.loading = false;

@@ -8,7 +8,9 @@
       </a>
       <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
       <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
-      <app-create-dropdown class="ms-3" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
+      @if (authService.isTechLead) {
+        <app-create-dropdown class="ms-3" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
+      }
     </div>
     <div class="flex items-center gap-2">
       <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>

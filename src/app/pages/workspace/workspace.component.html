@@ -42,7 +42,9 @@
       <div class="flex flex-col gap-7 items-center max-w-[500px] mx-auto">
         <img class="max-w-[410px]" src="../../../assets/workspace-first-board.svg" alt="">
         <p class="text-sm text-cc-subtle text-center">Boards are where work gets done in Trello. On a board, you can move cards between lists to keep projects, tasks, and more on track.</p>
-        <button (click)="showCreateBoardModal(workspace.id)" class="bg-cc-accent hover:bg-cc-accent-highlight py-[6px] px-6 rounded text-cc-base text-sm font-medium">Create your first board</button>
+        @if (authService.isTechLead) {
+          <button (click)="showCreateBoardModal(workspace.id)" class="bg-cc-accent hover:bg-cc-accent-highlight py-[6px] px-6 rounded text-cc-base text-sm font-medium">Create your first board</button>
+        }
       </div>
     }
     <app-delete-workspace [workspace]="workspace"></app-delete-workspace>

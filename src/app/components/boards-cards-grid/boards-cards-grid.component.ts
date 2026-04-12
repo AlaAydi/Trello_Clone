@@ -3,6 +3,7 @@ import { Component, Input, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { BoardPreviewCardComponent } from "../board-preview-card/board-preview-card.component";
 import { AppService } from '../../services/app.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-boards-cards-grid',
@@ -19,6 +20,7 @@ export class BoardsCardsGridComponent {
 
   @Input({required: true}) workspace: any;
   appService = inject(AppService)
+  authService = inject(AuthService);
 
   showCreateBoardModal(workspaceId: number) {
     this.appService.setCreateBoardWorkspace(workspaceId);

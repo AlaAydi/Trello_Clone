@@ -20,10 +20,12 @@
             </a>
           }
         } @else {
-          <button (click)="showCreateWorkspaceModal()" class="flex items-center duration-200 rounded-md gap-2 py-2 px-3 hover:bg-cc-overlay">
-              <app-plus-icon dimensions="size-3"></app-plus-icon>
-              Create a Workspace
-          </button>
+          @if (authService.isTechLead) {
+            <button (click)="showCreateWorkspaceModal()" class="flex items-center duration-200 rounded-md gap-2 py-2 px-3 hover:bg-cc-overlay">
+                <app-plus-icon dimensions="size-3"></app-plus-icon>
+                Create a Workspace
+            </button>
+          }
         }
       </div>
     </div>

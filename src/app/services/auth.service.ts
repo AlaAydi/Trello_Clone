@@ -26,6 +26,10 @@ export class AuthService {
         return !!this._user;
     }
 
+    get isTechLead(): boolean {
+        return this._user?.role === 'TECH_LEAD';
+    }
+
     login(email: string, password: string): Observable<any> {
         return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
             tap(response => {
