@@ -14,9 +14,20 @@
             <button cdkMenuItem (click)="setOpenedTask(card, list, $index)"
               class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
               <div class="flex flex-col w-full gap-1">
-                <p class="w-full text-start">{{card.title}}</p>
-                @if (card.description) {
-                  <app-text-icon dimensions="size-4"></app-text-icon>
+                <p class="w-full text-start pb-1">{{card.title}}</p>
+                @if (card.description || card.assignedToName) {
+                  <div class="flex w-full items-center justify-between mt-1">
+                    <div class="flex items-center text-cc-subtle">
+                      @if (card.description) {
+                        <app-text-icon dimensions="size-4"></app-text-icon>
+                      }
+                    </div>
+                    @if (card.assignedToName) {
+                      <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
+                        {{card.assignedToName}}
+                      </div>
+                    }
+                  </div>
                 }
               </div>
               <div class="size-5 flex justify-center items-center">
@@ -27,9 +38,20 @@
               <div *cdkDragPlaceholder class="relative">
                 <div class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
                   <div class="flex flex-col w-full gap-1">
-                    <p class="w-full text-start">{{card.title}}</p>
-                    @if (card.description) {
-                    <app-text-icon dimensions="size-4"></app-text-icon>
+                    <p class="w-full text-start pb-1">{{card.title}}</p>
+                    @if (card.description || card.assignedToName) {
+                      <div class="flex w-full items-center justify-between mt-1">
+                        <div class="flex items-center text-cc-subtle">
+                          @if (card.description) {
+                            <app-text-icon dimensions="size-4"></app-text-icon>
+                          }
+                        </div>
+                        @if (card.assignedToName) {
+                          <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
+                            {{card.assignedToName}}
+                          </div>
+                        }
+                      </div>
                     }
                   </div>
                   <div class="size-5 flex justify-center items-center">
@@ -55,9 +77,20 @@
                 <div
                   class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
                   <div class="flex flex-col w-full gap-1">
-                    <p class="w-full text-start">{{card.title}}</p>
-                    @if (card.description) {
-                    <app-text-icon dimensions="size-4"></app-text-icon>
+                    <p class="w-full text-start pb-1">{{card.title}}</p>
+                    @if (card.description || card.assignedToName) {
+                      <div class="flex w-full items-center justify-between mt-1">
+                        <div class="flex items-center text-cc-subtle">
+                          @if (card.description) {
+                            <app-text-icon dimensions="size-4"></app-text-icon>
+                          }
+                        </div>
+                        @if (card.assignedToName) {
+                          <div class="size-6 bg-cc-accent text-white rounded-full flex justify-center items-center text-[10px] font-bold shrink-0 shadow-sm" [title]="'Assigned to ' + card.assignedToName">
+                            {{card.assignedToName.charAt(0).toUpperCase()}}
+                          </div>
+                        }
+                      </div>
                     }
                   </div>
                   <div class="size-5 flex justify-center items-center">
