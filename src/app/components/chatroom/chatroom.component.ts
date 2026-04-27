@@ -47,15 +47,12 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngOnInit(): void {
     console.log('[Chat] Initialisation, user:', this.authService.user?.email);
-    // Connect WebSocket
     this.chatService.connect();
 
-    // Debug: tracker l'état de connexion
     this.chatService.connected$.subscribe(state =>
       console.log('[Chat] connected$ state:', state, '| isConnected:', this.chatService.isConnected)
     );
 
-    // Load message history
     this.chatService.loadHistory().subscribe({
       next: (history) => {
         console.log('[Chat] History loaded:', history.length, 'messages');
@@ -64,7 +61,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
       error: (err) => console.error('[Chat] Failed to load history:', err)
     });
 
-    // Track unread messages when panel is closed
     this.messageSub = this.messages$.subscribe(() => {
       if (!this.isOpen) {
         this.unreadCount++;
@@ -121,7 +117,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   getAvatarColor(email: string): string {
-    // Generate consistent color from email hash
     const colors = [
       '#6366f1', '#8b5cf6', '#ec4899', '#14b8a6',
       '#f59e0b', '#10b981', '#3b82f6', '#ef4444'
@@ -134,9 +129,11 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   private scrollToBottom(): void {
-    try {
-      const el = this.messagesContainer.nativeElement;
-      el.scrollTop = el.scrollHeight;
-    } catch (_) {}
+    setTimeout(() => {
+      try {
+        const el = this.messagesContainer.nativeElement;
+        el.scrollTop = el.scrollHeight;
+      } catch (_) {}
+    }, 50);
   }
 }
