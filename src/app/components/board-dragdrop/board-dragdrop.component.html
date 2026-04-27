@@ -23,8 +23,16 @@
                       }
                     </div>
                     @if (card.assignedToName) {
-                      <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
-                        {{card.assignedToName}}
+                      <div class="flex gap-1 items-center">
+                        <button (click)="openRoadmap($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Roadmap">
+                          🤖 <span class="hidden group-hover:inline">Plan</span>
+                        </button>
+                        <button (click)="openCodeReview($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Code Review">
+                          🔍 <span class="hidden group-hover:inline">Review</span>
+                        </button>
+                        <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
+                          {{card.assignedToName}}
+                        </div>
                       </div>
                     }
                   </div>
@@ -108,3 +116,17 @@
 </div>
 
 <app-task-modal [taskList]="taskList" [taskIndex]="taskIndex"></app-task-modal>
+
+@if (showRoadmapModal) {
+  <app-ticket-roadmap-modal
+    [ticket]="selectedTicketForAi"
+    (close)="closeRoadmap()">
+  </app-ticket-roadmap-modal>
+}
+
+@if (showCodeReviewModal) {
+  <app-code-analyzer-modal
+    [ticketId]="selectedTicketForAi?.id"
+    (close)="closeCodeReview()">
+  </app-code-analyzer-modal>
+}

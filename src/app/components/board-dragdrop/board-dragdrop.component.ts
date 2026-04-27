@@ -9,6 +9,8 @@ import { PencilIconComponent } from "../../icons/pencil-icon/pencil-icon.compone
 import { AppService } from '../../services/app.service';
 import { CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
+import { TicketRoadmapModalComponent } from "../ticket-roadmap-modal/ticket-roadmap-modal.component";
+import { CodeAnalyzerModalComponent } from "../code-analyzer-modal/code-analyzer-modal.component";
 
 @Component({
     selector: 'app-board-dragdrop',
@@ -31,7 +33,9 @@ import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
         PencilIconComponent,
         CdkMenu,
         CdkMenuItem,
-        TextIconComponent
+        TextIconComponent,
+        TicketRoadmapModalComponent,
+        CodeAnalyzerModalComponent
     ]
 })
 export class BoardDragdropComponent {
@@ -45,6 +49,39 @@ export class BoardDragdropComponent {
   task: any;
   taskList: any;
   taskIndex: any;
+
+  showRoadmapModal = false;
+  showCodeReviewModal = false;
+  selectedTicketForAi: any = null;
+
+  openRoadmap(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.selectedTicketForAi = {
+      title: card.title,
+      description: card.description || 'No description provided.',
+      priority: 'MEDIUM', // Default
+      labels: [],
+      assignee: card.assignedToName,
+      estimatedHours: 0
+    };
+    this.showRoadmapModal = true;
+  }
+
+  openCodeReview(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.selectedTicketForAi = card;
+    this.showCodeReviewModal = true;
+  }
+
+  closeRoadmap() {
+    this.showRoadmapModal = false;
+    this.selectedTicketForAi = null;
+  }
+
+  closeCodeReview() {
+    this.showCodeReviewModal = false;
+    this.selectedTicketForAi = null;
+  }
 
   updateListTitleForm = new FormGroup({
     title: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),

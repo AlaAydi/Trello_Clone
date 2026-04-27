@@ -1,0 +1,123 @@
+<div class="chat-overlay" [class.open]="isOpen">
+  <!-- Toggle Button -->
+  <button class="chat-toggle-btn" (click)="toggleChat()" [title]="isOpen ? 'Fermer le chat' : 'Ouvrir le chat'">
+    <span class="toggle-icon" *ngIf="!isOpen">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <span class="unread-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+    </span>
+    <span class="toggle-icon" *ngIf="isOpen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </span>
+  </button>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel" *ngIf="isOpen">
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar-group">
+          <div class="header-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="chat-header-info">
+          <h3>Team Chat</h3>
+          <span class="online-status" [class.connected]="connected$ | async">
+            <span class="status-dot"></span>
+            {{ (connected$ | async) ? 'Connecté' : 'Déconnecté' }}
+          </span>
+        </div>
+      </div>
+      <div class="online-users-count">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        {{ (onlineUsers$ | async)?.length || 0 }} en ligne
+      </div>
+    </div>
+
+    <!-- Messages Area -->
+    <div class="chat-messages" #messagesContainer>
+      <div class="messages-wrapper" *ngIf="(messages$ | async) as messages">
+        <div class="empty-chat" *ngIf="messages.length === 0">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <p>Aucun message pour l'instant.<br>Soyez le premier à écrire !</p>
+        </div>
+
+        <ng-container *ngFor="let msg of messages; let i = index">
+          <!-- System message (JOIN/LEAVE) -->
+          <div class="system-message" *ngIf="msg.type === 'JOIN' || msg.type === 'LEAVE'">
+            <span>{{ msg.content }}</span>
+          </div>
+
+          <!-- Chat message -->
+          <div class="message-bubble-wrapper"
+               *ngIf="msg.type === 'CHAT'"
+               [class.own-message]="msg.senderEmail === currentUser?.email">
+
+            <!-- Avatar (only for others' messages) -->
+            <div class="msg-avatar" *ngIf="msg.senderEmail !== currentUser?.email"
+                 [title]="msg.senderName"
+                 [style.background]="getAvatarColor(msg.senderEmail)">
+              {{ msg.senderName.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="message-content-group">
+              <!-- Sender name + role (only for others) -->
+              <div class="msg-meta" *ngIf="msg.senderEmail !== currentUser?.email">
+                <span class="msg-sender">{{ msg.senderName }}</span>
+                <span class="role-badge" [class.tech-lead]="msg.senderRole === 'TECH_LEAD'">
+                  {{ msg.senderRole === 'TECH_LEAD' ? '🎯 Tech Lead' : '💻 Developer' }}
+                </span>
+              </div>
+
+              <div class="message-bubble">
+                <p>{{ msg.content }}</p>
+              </div>
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="chat-input-area">
+      <div class="input-wrapper">
+        <input
+          #messageInput
+          type="text"
+          [(ngModel)]="newMessage"
+          (keydown.enter)="sendMessage()"
+          placeholder="Écrire un message..."
+          [disabled]="!isConnected"
+          maxlength="500"
+          id="chat-message-input"
+        />
+        <button
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!newMessage.trim() || !isConnected"
+          title="Envoyer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+      <div class="char-count" *ngIf="newMessage.length > 400">{{ 500 - newMessage.length }} restants</div>
+    </div>
+  </div>
+</div>
