@@ -36,6 +36,11 @@ export const routes: Routes = [
         path: 'workspace/:id',
         loadComponent: () => import('./pages/workspace/workspace.component'),
       },
+      {
+        path: 'approvals',
+        loadComponent: () => import('./pages/approvals/approvals.component'),
+        title: 'Approvals | Trello',
+      },
     ]
   },
   {

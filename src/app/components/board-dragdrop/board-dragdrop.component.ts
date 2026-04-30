@@ -11,6 +11,7 @@ import { CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
 import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
 import { TicketRoadmapModalComponent } from "../ticket-roadmap-modal/ticket-roadmap-modal.component";
 import { CodeAnalyzerModalComponent } from "../code-analyzer-modal/code-analyzer-modal.component";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-board-dragdrop',
@@ -43,6 +44,7 @@ export class BoardDragdropComponent {
   @Input({required: true}) board: any;
   appService = inject(AppService);
   boardService = inject(BoardService);
+  authService = inject(AuthService);
   listTitleEdit: number = -1;
   isList: boolean = false;
   isTask: boolean = false;
@@ -136,8 +138,13 @@ export class BoardDragdropComponent {
       this.boardService.transferTask({ fromList: previousContainer.data, toList: container.data, fromIndex: previousIndex, toIndex: currentIndex });
     }
 
-    // Persist to backend
     const movedTask = container.data.cards[currentIndex];
+    
+    if (this.authService.user?.role === 'DEVELOPER' && 
+        (container.data.title?.toLowerCase() === 'terminé' || container.data.title?.toLowerCase() === 'done')) {
+      movedTask.approvalStatus = 'PENDING';
+    }
+
     this.appService.updateCard(movedTask.id, {
       title: movedTask.title,
       description: movedTask.description,
@@ -145,6 +152,7 @@ export class BoardDragdropComponent {
       position: currentIndex,
       assignedToEmail: movedTask.assignedToEmail
     }).subscribe({
+      next: () => this.appService.refreshData(),
       error: (err) => console.error("Error persisting task move", err)
     });
   }

@@ -76,7 +76,8 @@ export class AppService {
             listId: l.id,
             position: c.position,
             assignedToEmail: c.assignedToEmail,
-            assignedToName: c.assignedToName
+            assignedToName: c.assignedToName,
+            approvalStatus: c.approvalStatus
           }))
         }))
       }))
@@ -268,6 +269,20 @@ export class AppService {
   deleteTask(taskList: any, taskIndex: number) {
     const cardId = taskList.cards[taskIndex].id;
     return this.http.delete(`${this.apiUrl}/cards/${cardId}`, { headers: this.getHeaders() })
+      .pipe(tap(() => this.refreshData()));
+  }
+
+  getPendingTasks() {
+    return this.http.get<any[]>(`${this.apiUrl}/cards/all/pending`, { headers: this.getHeaders() });
+  }
+
+  approveTask(taskId: number) {
+    return this.http.post<any>(`${this.apiUrl}/cards/${taskId}/approve`, {}, { headers: this.getHeaders() })
+      .pipe(tap(() => this.refreshData()));
+  }
+
+  rejectTask(taskId: number) {
+    return this.http.post<any>(`${this.apiUrl}/cards/${taskId}/reject`, {}, { headers: this.getHeaders() })
       .pipe(tap(() => this.refreshData()));
   }
 

@@ -15,9 +15,7 @@
     </span>
   </button>
 
-  <!-- Chat Panel -->
   <div class="chat-panel" *ngIf="isOpen">
-    <!-- Header -->
     <div class="chat-header">
       <div class="chat-header-left">
         <div class="chat-avatar-group">
@@ -46,7 +44,6 @@
       </div>
     </div>
 
-    <!-- Messages Area -->
     <div class="chat-messages" #messagesContainer>
       <div class="messages-wrapper" *ngIf="(messages$ | async) as messages">
         <div class="empty-chat" *ngIf="messages.length === 0">
@@ -57,17 +54,14 @@
         </div>
 
         <ng-container *ngFor="let msg of messages; let i = index">
-          <!-- System message (JOIN/LEAVE) -->
           <div class="system-message" *ngIf="msg.type === 'JOIN' || msg.type === 'LEAVE'">
             <span>{{ msg.content }}</span>
           </div>
 
-          <!-- Chat message -->
           <div class="message-bubble-wrapper"
                *ngIf="msg.type === 'CHAT'"
                [class.own-message]="msg.senderEmail === currentUser?.email">
 
-            <!-- Avatar (only for others' messages) -->
             <div class="msg-avatar" *ngIf="msg.senderEmail !== currentUser?.email"
                  [title]="msg.senderName"
                  [style.background]="getAvatarColor(msg.senderEmail)">
@@ -75,7 +69,6 @@
             </div>
 
             <div class="message-content-group">
-              <!-- Sender name + role (only for others) -->
               <div class="msg-meta" *ngIf="msg.senderEmail !== currentUser?.email">
                 <span class="msg-sender">{{ msg.senderName }}</span>
                 <span class="role-badge" [class.tech-lead]="msg.senderRole === 'TECH_LEAD'">
@@ -93,7 +86,6 @@
       </div>
     </div>
 
-    <!-- Input Area -->
     <div class="chat-input-area">
       <div class="input-wrapper">
         <input

@@ -9,7 +9,12 @@
       <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
       <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
       @if (authService.isTechLead) {
-        <app-create-dropdown class="ms-3" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
+        <a routerLink="/approvals" 
+          class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-3 py-1 rounded-sm text-sm flex items-center transition-colors"
+          [routerLinkActive]="'bg-cc-accent/20 text-cc-accent'">
+          Approvals
+        </a>
+        <app-create-dropdown class="ms-1" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
       }
     </div>
     <div class="flex items-center gap-2">

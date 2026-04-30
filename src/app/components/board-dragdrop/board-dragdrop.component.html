@@ -10,32 +10,60 @@
       </div>
       <div cdkMenu class="flex flex-col mx-1 px-1 py-[2px] gap-2 overflow-auto card-list" cdkDropList [cdkDropListData]="list" (cdkDropListDropped)="moveTask($event)">
         @for (card of list.cards; track $index) {
-          <div cdkDrag cdkDragPreviewContainer="parent" class="shadow-sm shadow-black/20 rounded" (mouseenter)="isTask = true" (mouseleave)="isTask = false">
+          <div cdkDrag cdkDragPreviewContainer="parent" 
+               [cdkDragDisabled]="card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED'"
+               [class.hidden]="(card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') && !authService.isTechLead && authService.user?.email !== card.assignedToEmail"
+               class="shadow-sm shadow-black/20 rounded {{ (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') ? 'cursor-not-allowed' : '' }}" (mouseenter)="isTask = true" (mouseleave)="isTask = false">
             <button cdkMenuItem (click)="setOpenedTask(card, list, $index)"
-              class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
+              class="text-sm py-2 group px-3 rounded-lg flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent {{ (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') ? 'bg-cc-task-card/40 opacity-70 cursor-not-allowed' : 'bg-cc-task-card' }}">
               <div class="flex flex-col w-full gap-1">
-                <p class="w-full text-start pb-1">{{card.title}}</p>
-                @if (card.description || card.assignedToName) {
-                  <div class="flex w-full items-center justify-between mt-1">
-                    <div class="flex items-center text-cc-subtle">
-                      @if (card.description) {
-                        <app-text-icon dimensions="size-4"></app-text-icon>
-                      }
+                @if (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') {
+                  <div class="flex flex-col w-full gap-2 p-2 bg-cc-overlay/10 border-2 border-dashed {{card.approvalStatus === 'PENDING' ? 'border-amber-500/30' : 'border-rose-500/30'}} rounded-lg">
+                    <div class="flex items-center justify-between w-full">
+                      <div class="flex items-center gap-2">
+                        <span class="flex h-2 w-2 rounded-full {{card.approvalStatus === 'PENDING' ? 'bg-amber-500 animate-pulse' : 'bg-rose-500'}}"></span>
+                        @if (card.approvalStatus === 'PENDING') {
+                          <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider">En attente d'approbation</span>
+                        } @else {
+                          <span class="text-[10px] font-bold text-rose-600 uppercase tracking-wider">Refusé et Bloqué</span>
+                        }
+                      </div>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="{{card.approvalStatus === 'PENDING' ? 'text-amber-500/50' : 'text-rose-500/50'}}"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                     </div>
-                    @if (card.assignedToName) {
-                      <div class="flex gap-1 items-center">
-                        <button (click)="openRoadmap($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Roadmap">
-                          🤖 <span class="hidden group-hover:inline">Plan</span>
-                        </button>
-                        <button (click)="openCodeReview($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Code Review">
-                          🔍 <span class="hidden group-hover:inline">Review</span>
-                        </button>
-                        <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
-                          {{card.assignedToName}}
-                        </div>
+                    @if (card.approvalStatus === 'REJECTED') {
+                      <div class="text-[10px] font-medium text-rose-600 bg-rose-500/10 p-1.5 rounded border border-rose-500/20">
+                        Cette tâche n'est pas approuvée par tech lead.
                       </div>
                     }
+                    <p class="text-sm font-medium text-cc-text-primary opacity-50">{{card.title}}</p>
+                    <div class="text-[10px] text-cc-subtle italic">Par: {{card.assignedToName || 'Développeur'}}</div>
                   </div>
+
+                } @else {
+                  <p class="w-full text-start pb-1">{{card.title}}</p>
+
+                  @if (card.description || card.assignedToName) {
+                    <div class="flex w-full items-center justify-between mt-1">
+                      <div class="flex items-center text-cc-subtle">
+                        @if (card.description) {
+                          <app-text-icon dimensions="size-4"></app-text-icon>
+                        }
+                      </div>
+                      @if (card.assignedToName) {
+                        <div class="flex gap-1 items-center">
+                          <button (click)="openRoadmap($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Roadmap">
+                            🤖 <span class="hidden group-hover:inline">Plan</span>
+                          </button>
+                          <button (click)="openCodeReview($event, card)" class="p-1 hover:bg-cc-accent/20 rounded text-[10px] text-cc-accent border border-cc-accent/30 flex items-center gap-1" title="AI Code Review">
+                            🔍 <span class="hidden group-hover:inline">Review</span>
+                          </button>
+                          <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0" [title]="'Assigned to ' + card.assignedToName">
+                            {{card.assignedToName}}
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
                 }
               </div>
               <div class="size-5 flex justify-center items-center">
