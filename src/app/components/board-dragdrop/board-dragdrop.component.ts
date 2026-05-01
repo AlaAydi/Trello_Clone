@@ -53,17 +53,17 @@ export class BoardDragdropComponent {
               card.cardColor = 'bg-green-500 text-white border-none';
               card.statusText = 'Acceptée';
               card.statusIcon = 'check';
-              card.message = 'Cette tâche a été validée.';
+              card.message = 'Tâche validée.';
             } else if (status === 'REJECTED') {
               card.cardColor = 'bg-red-500 text-white border-none';
               card.statusText = 'Refusée';
               card.statusIcon = 'x';
-              card.message = 'Tâche refusée par le Tech Lead.';
+              card.message = 'Tâche à corriger.';
             } else {
               card.cardColor = 'bg-orange-500 text-white border-none';
-              card.statusText = 'En attente';
+              card.statusText = 'En vérification';
               card.statusIcon = 'clock';
-              card.message = 'Cette tâche est en attente de validation.';
+              card.message = 'Attente de validation.';
             }
           } else {
             card.cardColor = 'bg-cc-task-card';
@@ -159,7 +159,7 @@ export class BoardDragdropComponent {
 
   isDoneList(list: any): boolean {
     const title = list.title?.toLowerCase().trim() || '';
-    return title === 'terminé' || title === 'termine' || title === 'done' || title === 'fini';
+    return title === 'terminé' || title === 'termine' || title === 'teminé' || title === 'teminée' || title === 'done' || title === 'fini' || title.includes('termin');
   }
 
   moveTask(event: CdkDragDrop<any>) {
@@ -227,6 +227,22 @@ export class BoardDragdropComponent {
     let modal = document.getElementById('task-modal');
     // @ts-ignore
     modal?.showModal();
+  }
+
+  approveTask(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.appService.approveTask(card.id).subscribe({
+      next: () => this.appService.refreshData(),
+      error: (err) => console.error("Error approving task", err)
+    });
+  }
+
+  rejectTask(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.appService.rejectTask(card.id).subscribe({
+      next: () => this.appService.refreshData(),
+      error: (err) => console.error("Error rejecting task", err)
+    });
   }
 
 }

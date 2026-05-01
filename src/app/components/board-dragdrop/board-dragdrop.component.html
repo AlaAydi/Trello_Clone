@@ -18,12 +18,12 @@
       [cdkDropListData]="list" (cdkDropListDropped)="moveTask($event)">
       @for (card of list.cards; track $index) {
       <div cdkDrag cdkDragPreviewContainer="parent"
-        [cdkDragDisabled]="(!authService.isTechLead && (isDoneList(list) || card.approvalStatus?.trim() === 'APPROVED')) || card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED'"
+        [cdkDragDisabled]="!authService.isTechLead && (isDoneList(list) || card.approvalStatus?.trim() === 'APPROVED' || card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED')"
         [class.hidden]="(card.approvalStatus?.trim() === 'REJECTED' && !authService.isTechLead && authService.user?.email !== card.assignedToEmail)"
-        class="shadow-sm shadow-black/20 rounded {{ (card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED' || (!authService.isTechLead && isDoneList(list))) ? 'cursor-not-allowed' : '' }}"
+        class="shadow-sm shadow-black/20 rounded {{ (!authService.isTechLead && (card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED' || isDoneList(list))) ? 'cursor-not-allowed' : 'cursor-pointer' }}"
         (mouseenter)="isTask = true" (mouseleave)="isTask = false">
-        <button cdkMenuItem (click)="setOpenedTask(card, list, $index)" 
-          class="text-sm py-3 group px-4 rounded-xl flex w-full transition-all duration-300 shadow-md hover:shadow-lg {{card.cardColor}}">
+        <div (click)="setOpenedTask(card, list, $index)" 
+          class="text-sm py-3 group px-4 rounded-xl flex flex-col w-full transition-all duration-300 shadow-md hover:shadow-lg {{card.cardColor}} cursor-pointer">
           
           <div class="flex flex-col w-full gap-2 text-start">
             
@@ -46,10 +46,24 @@
             <h4 class="text-sm font-bold leading-snug">{{card.title}}</h4>
 
             @if (card.message) {
-              <p class="text-[10px] font-medium opacity-90 leading-tight">
+              <p class="text-[10px] font-medium opacity-90 leading-tight mb-2">
                 {{card.message}}
               </p>
-            } @else {
+            }
+
+            <!-- Tech Lead Buttons -->
+            @if (authService.isTechLead && isDoneList(list) && card.approvalStatus !== 'APPROVED' && card.approvalStatus !== 'REJECTED') {
+              <div class="flex gap-2 mt-2 pt-2 border-t border-white/10">
+                <button (click)="approveTask($event, card)" class="flex-1 bg-green-600 hover:bg-green-700 text-white text-[10px] font-bold py-1.5 rounded uppercase transition-colors">
+                  Approuver
+                </button>
+                <button (click)="rejectTask($event, card)" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-[10px] font-bold py-1.5 rounded uppercase transition-colors">
+                  Refuser
+                </button>
+              </div>
+            }
+
+            @if (!card.message) {
               @if (card.description || card.assignedToName) {
                 <div class="flex w-full items-center justify-between mt-1 pt-1 border-t border-cc-border/10">
                   <div class="flex items-center text-cc-subtle">
@@ -66,7 +80,7 @@
               }
             }
           </div>
-        </button>
+        </div>
         @if (isTask) {
         <div *cdkDragPlaceholder class="relative">
           <div
