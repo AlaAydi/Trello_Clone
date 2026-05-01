@@ -29,11 +29,17 @@ export class NavBarComponent implements OnInit {
   authService = inject(AuthService);
   boardPage: boolean = false;
   board: any;
+  pendingCount: number = 0;
 
   ngOnInit() {
     this.appService.getBoard().subscribe({
       next: (res) => this.board = res
     });
+
+    this.appService.pendingCount.subscribe(count => {
+      this.pendingCount = count;
+    });
+
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const currentRoute = this.router.url.split('?')[0].split('/').filter(segment => segment !== '');

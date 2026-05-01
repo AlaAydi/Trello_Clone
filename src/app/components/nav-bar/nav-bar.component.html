@@ -10,9 +10,17 @@
       <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
       @if (authService.isTechLead) {
         <a routerLink="/approvals" 
-          class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-3 py-1 rounded-sm text-sm flex items-center transition-colors"
+          class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-3 py-1 rounded-sm text-sm flex items-center transition-colors relative"
           [routerLinkActive]="'bg-cc-accent/20 text-cc-accent'">
           Approvals
+          @if (pendingCount > 0) {
+            <span class="absolute -top-1 -right-1 flex h-4 w-4">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-4 w-4 bg-rose-600 text-[10px] text-white items-center justify-center font-bold">
+                {{pendingCount}}
+              </span>
+            </span>
+          }
         </a>
         <app-create-dropdown class="ms-1" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
       }

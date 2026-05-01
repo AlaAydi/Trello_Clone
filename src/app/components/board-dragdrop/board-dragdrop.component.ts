@@ -124,11 +124,21 @@ export class BoardDragdropComponent {
     }    
   }
 
+  isDoneList(list: any): boolean {
+    const title = list.title?.toLowerCase().trim() || '';
+    return title === 'terminé' || title === 'termine' || title === 'done' || title === 'fini';
+  }
+
   moveTask(event: CdkDragDrop<any>) {
     const { previousContainer, container, previousIndex, currentIndex } = event;
     const isSameContainer = previousContainer == container;
 
     if (isSameContainer && previousIndex == currentIndex) {
+      return;
+    }
+
+    // Restriction: Developers cannot move tasks OUT of a "Done" list
+    if (!this.authService.isTechLead && this.isDoneList(previousContainer.data)) {
       return;
     }
 
@@ -140,8 +150,7 @@ export class BoardDragdropComponent {
 
     const movedTask = container.data.cards[currentIndex];
     
-    if (this.authService.user?.role === 'DEVELOPER' && 
-        (container.data.title?.toLowerCase() === 'terminé' || container.data.title?.toLowerCase() === 'done')) {
+    if (this.authService.user?.role === 'DEVELOPER' && this.isDoneList(container.data)) {
       movedTask.approvalStatus = 'PENDING';
     }
 

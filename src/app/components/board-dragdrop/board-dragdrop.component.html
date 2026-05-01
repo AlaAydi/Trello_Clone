@@ -11,9 +11,9 @@
       <div cdkMenu class="flex flex-col mx-1 px-1 py-[2px] gap-2 overflow-auto card-list" cdkDropList [cdkDropListData]="list" (cdkDropListDropped)="moveTask($event)">
         @for (card of list.cards; track $index) {
           <div cdkDrag cdkDragPreviewContainer="parent" 
-               [cdkDragDisabled]="card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED'"
-               [class.hidden]="(card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') && !authService.isTechLead && authService.user?.email !== card.assignedToEmail"
-               class="shadow-sm shadow-black/20 rounded {{ (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') ? 'cursor-not-allowed' : '' }}" (mouseenter)="isTask = true" (mouseleave)="isTask = false">
+               [cdkDragDisabled]="(!authService.isTechLead && (isDoneList(list) || card.approvalStatus === 'APPROVED')) || card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED'"
+               [class.hidden]="(!authService.isTechLead && isDoneList(list) && card.approvalStatus === 'APPROVED') || ((card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') && !authService.isTechLead && authService.user?.email !== card.assignedToEmail)"
+               class="shadow-sm shadow-black/20 rounded {{ (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED' || (!authService.isTechLead && isDoneList(list))) ? 'cursor-not-allowed' : '' }}" (mouseenter)="isTask = true" (mouseleave)="isTask = false">
             <button cdkMenuItem (click)="setOpenedTask(card, list, $index)"
               class="text-sm py-2 group px-3 rounded-lg flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent {{ (card.approvalStatus === 'PENDING' || card.approvalStatus === 'REJECTED') ? 'bg-cc-task-card/40 opacity-70 cursor-not-allowed' : 'bg-cc-task-card' }}">
               <div class="flex flex-col w-full gap-1">

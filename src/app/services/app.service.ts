@@ -16,6 +16,7 @@ export class AppService {
   data: BehaviorSubject<any> = new BehaviorSubject<any>({ workspaces: [], recent: [] });
   selectedBoard: BehaviorSubject<any> = new BehaviorSubject(undefined);
   openedTask: BehaviorSubject<any> = new BehaviorSubject(undefined);
+  pendingCount: BehaviorSubject<number> = new BehaviorSubject(0);
   createBoardWorkspace: BehaviorSubject<any> = new BehaviorSubject(undefined);
 
   constructor() {
@@ -36,7 +37,6 @@ export class AppService {
         const currentData = this.data.value;
         this.data.next({ workspaces: mappedWorkspaces, recent: currentData.recent || [] });
 
-        // Refresh selectedBoard if one is active
         const currentBoard = this.selectedBoard.value;
         if (currentBoard) {
           for (const ws of mappedWorkspaces) {
@@ -54,6 +54,13 @@ export class AppService {
       },
       error: (err) => console.error("Error refreshing data", err)
     });
+
+    if (this.authService.isTechLead) {
+      this.getPendingTasks().subscribe({
+        next: (tasks) => this.pendingCount.next(tasks.length),
+        error: (err) => console.error("Error fetching pending tasks for count", err)
+      });
+    }
   }
 
   private mapWorkspace(w: any): any {
