@@ -7,7 +7,6 @@
   
     <div class="bg-cc-board-filter duration-200 h-full w-full flex flex-col overflow-hidden pb-2">
   
-      <!-- toolbar -->
       <div class="py-3 px-4 gap-4 min-h-[56px] bg-black/25 flex justify-between text-white">
         <div class="w-fit relative flex flex-col overflow-hidden">
           <button [attr.aria-hidden]="editTitle" (click)="editTitle = true; titleInput.focus(); titleInput.select()"
@@ -23,8 +22,29 @@
           <app-menu-dots-icon dimensions="size-4"></app-menu-dots-icon>
         </button>
       </div>
+
+      @if (!authService.isTechLead && myPendingTasksCount > 0) {
+        <div class="mx-4 mt-3 animate-in fade-in slide-in-from-top-2 duration-500">
+          <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg shadow-amber-900/10 backdrop-blur-sm">
+            <div class="flex items-center gap-4">
+              <div class="size-10 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-500">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="text-sm font-bold text-amber-500 uppercase tracking-wider">Vérification en cours</h3>
+                <p class="text-xs text-cc-subtle">Vous avez <span class="font-bold text-amber-600/80">{{myPendingTasksCount}}</span> tâche{{myPendingTasksCount > 1 ? 's' : ''}} en cours de vérification par le Tech Lead.</p>
+              </div>
+            </div>
+            <div class="px-3 py-1 bg-amber-500/10 rounded-full text-[10px] font-bold text-amber-600 border border-amber-500/20 uppercase tracking-tighter">
+              Action Requise: Attendre
+            </div>
+          </div>
+        </div>
+      }
   
-      <!-- board -->
       <div id="board-content"
         class="flex gap-3 p-3 pb-2 flex-grow items-start overflow-x-auto min-w-full overflow-y-hidden"
         (mousedown)="ableToScroll? pointerScroll() : ''" (mouseenter)="setBoardScroll(true)">
@@ -35,10 +55,8 @@
       </div>
   
     </div>
-  
-    <!-- setting sidebar -->
+
     <app-board-settings [board]="board" [workspace]="workspace"></app-board-settings>
-  
     </div>
   </div>
 } @else {

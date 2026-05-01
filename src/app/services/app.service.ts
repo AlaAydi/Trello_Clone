@@ -21,6 +21,9 @@ export class AppService {
 
   constructor() {
     this.refreshData();
+    setInterval(() => {
+      this.refreshData();
+    }, 10000);
   }
 
   private getHeaders() {
@@ -42,6 +45,7 @@ export class AppService {
           for (const ws of mappedWorkspaces) {
             const updatedBoard = ws.boards.find((b: any) => b.id === currentBoard.id);
             if (updatedBoard) {
+              console.log(">>> AppService: Mise à jour du tableau sélectionné détectée.", updatedBoard);
               this.selectedBoard.next(updatedBoard);
               break;
             }

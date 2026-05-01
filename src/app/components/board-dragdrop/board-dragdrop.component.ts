@@ -41,7 +41,41 @@ import { AuthService } from '../../services/auth.service';
 })
 export class BoardDragdropComponent {
 
-  @Input({required: true}) board: any;
+  @Input() 
+  set board(value: any) {
+    if (value && value.lists) {
+      value.lists.forEach((list: any) => {
+        const isDone = this.isDoneList(list);
+        list.cards?.forEach((card: any) => {
+          const status = card.approvalStatus?.toString().trim().toUpperCase();
+          if (isDone) {
+            if (status === 'APPROVED') {
+              card.cardColor = 'bg-green-500 text-white border-none';
+              card.statusText = 'Acceptée';
+              card.statusIcon = 'check';
+              card.message = 'Cette tâche a été validée.';
+            } else if (status === 'REJECTED') {
+              card.cardColor = 'bg-red-500 text-white border-none';
+              card.statusText = 'Refusée';
+              card.statusIcon = 'x';
+              card.message = 'Tâche refusée par le Tech Lead.';
+            } else {
+              card.cardColor = 'bg-orange-500 text-white border-none';
+              card.statusText = 'En attente';
+              card.statusIcon = 'clock';
+              card.message = 'Cette tâche est en attente de validation.';
+            }
+          } else {
+            card.cardColor = 'bg-cc-task-card';
+          }
+        });
+      });
+    }
+    this._board = value;
+    console.log(">>> BoardDragdrop: Données traitées avec couleurs:", value);
+  }
+  get board() { return this._board; }
+  private _board: any;
   appService = inject(AppService);
   boardService = inject(BoardService);
   authService = inject(AuthService);
@@ -61,7 +95,7 @@ export class BoardDragdropComponent {
     this.selectedTicketForAi = {
       title: card.title,
       description: card.description || 'No description provided.',
-      priority: 'MEDIUM', // Default
+      priority: 'MEDIUM', 
       labels: [],
       assignee: card.assignedToName,
       estimatedHours: 0
@@ -95,9 +129,8 @@ export class BoardDragdropComponent {
     })
     this.listTitleEdit = listIndex;
     setTimeout(() => {
-      let input = document.getElementById(`${listIndex}-title-input`);
+      let input = document.getElementById(`${listIndex}-title-input`) as HTMLInputElement;
       input?.focus();
-      // @ts-ignore
       input?.select();
     });
   }
@@ -117,7 +150,7 @@ export class BoardDragdropComponent {
         }).subscribe({
           error: (err) => {
             console.error("Error updating list title", err);
-            list.title = oldTitle; // Rollback on error
+            list.title = oldTitle; 
           }
         });
       }
@@ -137,7 +170,6 @@ export class BoardDragdropComponent {
       return;
     }
 
-    // Restriction: Developers cannot move tasks OUT of a "Done" list
     if (!this.authService.isTechLead && this.isDoneList(previousContainer.data)) {
       return;
     }
@@ -151,7 +183,11 @@ export class BoardDragdropComponent {
     const movedTask = container.data.cards[currentIndex];
     
     if (this.authService.user?.role === 'DEVELOPER' && this.isDoneList(container.data)) {
-      movedTask.approvalStatus = 'PENDING';
+      if (movedTask.approvalStatus !== 'APPROVED' && movedTask.approvalStatus !== 'REJECTED') {
+        movedTask.approvalStatus = 'PENDING';
+        movedTask.assignedToEmail = this.authService.user?.email;
+        movedTask.assignedToName = this.authService.user?.fullName;
+      }
     }
 
     this.appService.updateCard(movedTask.id, {

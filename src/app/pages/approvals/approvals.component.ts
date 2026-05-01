@@ -29,20 +29,24 @@ export default class ApprovalsComponent implements OnInit {
   }
 
   approve(taskId: number) {
+    console.log(">>> Frontend: Envoi de la demande d'APPROBATION pour la tâche ID:", taskId);
     this.appService.approveTask(taskId).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log(">>> Frontend: APPROBATION RÉUSSIE pour l'ID:", taskId, "Réponse du serveur:", res);
         this.loadPendingTasks();
       },
-      error: (err) => console.error("Error approving task", err)
+      error: (err) => console.error(">>> Frontend: ÉCHEC de l'approbation pour l'ID:", taskId, err)
     });
   }
 
   reject(taskId: number) {
+    console.log(">>> Frontend: Envoi de la demande de REFUS pour la tâche ID:", taskId);
     this.appService.rejectTask(taskId).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log(">>> Frontend: REFUS RÉUSSI pour l'ID:", taskId, "Réponse du serveur:", res);
         this.loadPendingTasks();
       },
-      error: (err) => console.error("Error rejecting task", err)
+      error: (err) => console.error(">>> Frontend: ÉCHEC du refus pour l'ID:", taskId, err)
     });
   }
 }

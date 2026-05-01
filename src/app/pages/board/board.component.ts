@@ -14,6 +14,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BoardDragdropComponent } from "../../components/board-dragdrop/board-dragdrop.component";
 import { TaskModalComponent } from "../../components/task-modal/task-modal.component";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-board',
@@ -54,6 +55,24 @@ export default class BoardComponent implements OnInit {
   boardTitleForm = new FormGroup({
     title: new FormControl('', [Validators.required])
   });
+
+  public authService = inject(AuthService);
+
+  get myPendingTasksCount(): number {
+    if (!this.board || !this.board.lists || !this.authService.user) return 0;
+    let count = 0;
+    const userEmail = this.authService.user.email;
+    for (const list of this.board.lists) {
+      if (list.cards) {
+        for (const card of list.cards) {
+          if (card.approvalStatus === 'PENDING' && card.assignedToEmail === userEmail) {
+            count++;
+          }
+        }
+      }
+    }
+    return count;
+  }
 
   ngOnInit(): void {
     this.settings = this.boardService.getSettingsSidebar();

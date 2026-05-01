@@ -9,7 +9,22 @@
         </button>
       </div>
 
-      <!-- Assignment Status -->
+      <div *ngIf="task.approvalStatus === 'PENDING'" class="mx-1 ms-10 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex items-center gap-3">
+        <div class="size-3 bg-amber-500 rounded-full animate-pulse shrink-0"></div>
+        <div class="flex flex-col">
+          <span class="text-xs font-bold text-amber-600 uppercase tracking-wider">Vérification en cours</span>
+          <span class="text-xs text-amber-700/70">Cette tâche est en cours de vérification par le Tech Lead.</span>
+        </div>
+      </div>
+
+      <div *ngIf="task.approvalStatus === 'REJECTED'" class="mx-1 ms-10 bg-rose-500/10 border border-rose-500/20 rounded-lg p-3 flex items-center gap-3">
+        <div class="size-3 bg-rose-500 rounded-full shrink-0"></div>
+        <div class="flex flex-col">
+          <span class="text-xs font-bold text-rose-600 uppercase tracking-wider">Tâche Refusée</span>
+          <span class="text-xs text-rose-700/70">Le Tech Lead a refusé cette tâche. Elle est actuellement bloquée.</span>
+        </div>
+      </div>
+
       <div *ngIf="task.assignedToName" class="ms-10 flex items-center gap-2 text-sm text-cc-subtle">
         <span class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full font-medium">Assigned to: {{ task.assignedToName }}</span>
       </div>
@@ -22,12 +37,11 @@
             </div>
             <span class="ms-[13px] font-semibold">Description</span>
           </div>
-          <textarea (blur)="updateTask()" formControlName="description" id="description" rows="5" placeholder="Add a more detailed description…" class="ms-10 px-3 py-[6px] text-sm bg-cc-overlay hover:bg-cc-subtle/20 focus:bg-cc-base focus:border-cc-accent border-2 border-transparent rounded-md outline-none resize-none"></textarea>          
+          <textarea (blur)="updateTask()" formControlName="description" id="description" rows="5" placeholder="Add a more detailed description…" class="ms-10 px-3 py-[6px] text-sm bg-cc-overlay hover:bg-cc-subtle/20 focus:bg-cc-base focus:border-cc-accent border-2 border-transparent rounded-md outline-none resize-none"></textarea>
         </div>
         <div class="max-w-[168px] w-full flex flex-col gap-2 text-sm">
           <p class="text-xs font-semibold text-cc-subtle">Actions</p>
-          
-          <!-- Assignment Dropdown for Tech Lead -->
+
           <div *ngIf="authService.user?.role === 'TECH_LEAD'" class="flex flex-col gap-1 mb-2">
             <label class="text-[10px] uppercase font-bold text-cc-subtle px-1">Assign to</label>
             <select formControlName="assignedToEmail" class="bg-cc-overlay hover:bg-cc-subtle/20 w-full py-[6px] px-3 rounded font-medium outline-none border-none mb-1">
