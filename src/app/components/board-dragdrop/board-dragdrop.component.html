@@ -1,146 +1,95 @@
-<div class="h-full flex gap-3" cdkDropListGroup cdkDropList cdkDropListOrientation="horizontal"
+<div class="h-full flex gap-4 p-4 overflow-x-auto scrollbar" cdkDropListGroup cdkDropList cdkDropListOrientation="horizontal"
   (cdkDropListDropped)="moveList($event)">
   @for (list of board.lists; track $index) {
-  <app-task-card-list [list]="list" [listIndex]="$index" cdkDrag cdkDragPreviewContainer="parent"
-    (mouseenter)="isList = true" (mouseleave)="isList = false">
-    <div class="p-2 text-sm font-semibold flex gap-1" cdkDragHandle>
-      <button (click)="showTitleInput($index, list.title)"
-        class="{{listTitleEdit == $index? 'hidden' : ''}} w-full py-1 px-3 text-start border-2 border-transparent rounded-lg">{{list.title}}</button>
-      <form class="{{listTitleEdit == $index? '' : 'hidden'}} w-full" [formGroup]="updateListTitleForm"
-        (ngSubmit)="listTitleInput.blur()">
-        <input #listTitleInput id="{{$index}}-title-input" formControlName="title"
-          class="bg-cc-menu border-2 focus:border-cc-accent outline-none rounded-lg w-full py-1 px-3" type="text"
-          (blur)="submitTitle(list)">
-      </form>
-      <app-list-options [board]="board" [list]="list" [listIndex]="$index"></app-list-options>
-    </div>
-    <div cdkMenu class="flex flex-col mx-1 px-1 py-[2px] gap-2 overflow-auto card-list" cdkDropList
-      [cdkDropListData]="list" (cdkDropListDropped)="moveTask($event)">
-      @for (card of list.cards; track $index) {
-      <div cdkDrag cdkDragPreviewContainer="parent"
-        [cdkDragDisabled]="(!authService.isTechLead && (isDoneList(list) || card.approvalStatus?.trim() === 'APPROVED')) || card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED'"
-        [class.hidden]="(card.approvalStatus?.trim() === 'REJECTED' && !authService.isTechLead && authService.user?.email !== card.assignedToEmail)"
-        class="shadow-sm shadow-black/20 rounded {{ (card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED' || (!authService.isTechLead && isDoneList(list))) ? 'cursor-not-allowed' : '' }}"
-        (mouseenter)="isTask = true" (mouseleave)="isTask = false">
-        <button cdkMenuItem (click)="setOpenedTask(card, list, $index)" 
-          class="text-sm py-3 group px-4 rounded-xl flex w-full transition-all duration-300 shadow-md hover:shadow-lg {{card.cardColor}}">
+  <div class="h-full w-[280px] shrink-0" cdkDrag cdkDragPreviewContainer="parent">
+    <app-task-card-list [list]="list" [listIndex]="$index" 
+      class="glass-dark rounded-2xl flex flex-col h-full premium-shadow transition-all duration-300 hover:bg-black/40 border border-white/5"
+      (mouseenter)="isList = true" (mouseleave)="isList = false">
+      
+      <div class="p-4 flex items-center justify-between" cdkDragHandle>
+        <div class="flex-1">
+          <button (click)="showTitleInput($index, list.title)"
+            class="{{listTitleEdit == $index? 'hidden' : ''}} w-full text-start text-sm font-bold tracking-tight text-white/90 px-2 py-1 rounded-md hover:bg-white/5 transition-colors uppercase text-[11px] letter-spacing-1">
+            {{list.title}}
+            <span class="ml-2 text-[10px] opacity-40 font-medium">{{list.cards?.length || 0}}</span>
+          </button>
+          <form class="{{listTitleEdit == $index? '' : 'hidden'}} w-full" [formGroup]="updateListTitleForm"
+            (ngSubmit)="listTitleInput.blur()">
+            <input #listTitleInput id="{{$index}}-title-input" formControlName="title"
+              class="bg-black/30 border border-cc-accent/30 text-white text-sm outline-none rounded-lg w-full py-1 px-3" type="text"
+              (blur)="submitTitle(list)">
+          </form>
+        </div>
+        <app-list-options [board]="board" [list]="list" [listIndex]="$index"></app-list-options>
+      </div>
+
+      <div cdkMenu class="flex flex-col flex-1 mx-2 mb-4 px-1 gap-3 overflow-y-auto scrollbar-thin" cdkDropList
+        [cdkDropListData]="list" (cdkDropListDropped)="moveTask($event)">
+        @for (card of list.cards; track $index) {
+        <div cdkDrag cdkDragPreviewContainer="parent"
+          [cdkDragDisabled]="(!authService.isTechLead && (isDoneList(list) || card.approvalStatus?.trim() === 'APPROVED')) || card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED'"
+          [class.hidden]="(card.approvalStatus?.trim() === 'REJECTED' && !authService.isTechLead && authService.user?.email !== card.assignedToEmail)"
+          class="group/card relative rounded-xl transition-all duration-300 {{ (card.approvalStatus?.trim() === 'PENDING' || card.approvalStatus?.trim() === 'REJECTED' || (!authService.isTechLead && isDoneList(list))) ? 'cursor-not-allowed opacity-90' : 'cursor-pointer active:scale-95' }}"
+          (mouseenter)="isTask = true" (mouseleave)="isTask = false">
           
-          <div class="flex flex-col w-full gap-2 text-start">
+          <button cdkMenuItem (click)="setOpenedTask(card, list, $index)" 
+            class="text-sm p-4 rounded-xl flex flex-col w-full text-start transition-all duration-500 shadow-lg hover:shadow-xl premium-shadow {{card.cardColor}} relative overflow-hidden">
             
+            <!-- Glass Overlay on Hover -->
+            <div class="absolute inset-0 bg-white/0 group-hover/card:bg-white/5 transition-colors duration-300 pointer-events-none"></div>
+
             @if (card.statusText) {
-              <div class="flex items-center justify-between w-full border-b border-white/20 pb-2 mb-1">
-                <div class="flex items-center gap-2">
+              <div class="flex items-center justify-between w-full mb-3">
+                <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full {{card.badgeClass}} backdrop-blur-sm border border-white/10">
                   @if (card.statusIcon === 'check') {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                   } @else if (card.statusIcon === 'x') {
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   } @else {
-                    <span class="flex h-2 w-2 rounded-full bg-white animate-ping"></span>
+                    <span class="flex h-1.5 w-1.5 rounded-full bg-white animate-pulse"></span>
                   }
-                  <span class="text-[10px] font-black uppercase tracking-widest">{{card.statusText}}</span>
+                  <span class="text-[9px] font-bold uppercase tracking-wider">{{card.statusText}}</span>
                 </div>
-                <div class="text-[9px] font-bold opacity-80 bg-black/10 px-1.5 rounded">Vérification</div>
+                <div class="text-[8px] font-black opacity-40 uppercase tracking-tighter">SECURED</div>
               </div>
             }
 
-            <h4 class="text-sm font-bold leading-snug">{{card.title}}</h4>
+            <h4 class="text-[14px] font-semibold leading-tight mb-2 tracking-tight">{{card.title}}</h4>
 
             @if (card.message) {
-              <p class="text-[10px] font-medium opacity-90 leading-tight">
-                {{card.message}}
+              <p class="text-[11px] font-medium opacity-80 leading-snug italic mb-1">
+                "{{card.message}}"
               </p>
-            } @else {
-              @if (card.description || card.assignedToName) {
-                <div class="flex w-full items-center justify-between mt-1 pt-1 border-t border-cc-border/10">
-                  <div class="flex items-center text-cc-subtle">
-                    @if (card.description) {
-                      <app-text-icon dimensions="size-3"></app-text-icon>
-                    }
+            } 
+
+            <div class="flex w-full items-center justify-between mt-auto pt-3 border-t border-white/10">
+              <div class="flex items-center gap-2">
+                @if (card.description) {
+                  <div class="opacity-60">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                   </div>
-                  @if (card.assignedToName) {
-                    <div class="bg-cc-accent/10 text-cc-accent px-2 py-0.5 rounded-full text-[9px] font-bold">
-                      {{card.assignedToName}}
-                    </div>
-                  }
-                </div>
-              }
-            }
-          </div>
-        </button>
-        @if (isTask) {
-        <div *cdkDragPlaceholder class="relative">
-          <div
-            class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
-            <div class="flex flex-col w-full gap-1">
-              <p class="w-full text-start pb-1">{{card.title}}</p>
-              @if (card.description || card.assignedToName) {
-              <div class="flex w-full items-center justify-between mt-1">
-                <div class="flex items-center text-cc-subtle">
-                  @if (card.description) {
-                  <app-text-icon dimensions="size-4"></app-text-icon>
-                  }
-                </div>
-                @if (card.assignedToName) {
-                <div class="bg-cc-accent/20 text-cc-accent px-2 py-0.5 rounded-full text-[10px] font-medium shrink-0"
-                  [title]="'Assigned to ' + card.assignedToName">
-                  {{card.assignedToName}}
-                </div>
                 }
               </div>
+              @if (card.assignedToName) {
+                <div class="flex items-center gap-1.5">
+                  <div class="size-5 rounded-full bg-black/20 flex items-center justify-center text-[9px] font-bold border border-white/10 uppercase">
+                    {{card.assignedToName.charAt(0)}}
+                  </div>
+                  <span class="text-[10px] font-semibold opacity-70 truncate max-w-[80px]">{{card.assignedToName}}</span>
+                </div>
               }
             </div>
-            <div class="size-5 flex justify-center items-center">
-              <app-pencil-icon dimensions="size-3"
-                class="group-hover:visible group-focus:visible invisible text-cc-subtle"></app-pencil-icon>
-            </div>
+          </button>
+
+          <!-- Edit indicator -->
+          <div class="absolute top-2 right-2 opacity-0 group-hover/card:opacity-100 transition-opacity pointer-events-none">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/40"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           </div>
-          <div class="absolute top-0 left-0 rounded-lg bg-cc-task-drop w-full h-full"></div>
         </div>
         }
       </div>
-      }
-    </div>
-    @if (isList) {
-    <div *cdkDragPlaceholder class="opacity-20 overflow-hidden max-h-full flex flex-col rounded-xl">
-      <app-task-card-list [list]="list" [listIndex]="$index">
-        <div class="h-full w-full absolute bg-black top-0 left-0"></div>
-        <div class="flex p-2 text-sm font-medium">
-          <p class="text-sm font-semibold py-2 px-3">{{list.title}}</p>
-        </div>
-        <div class="flex flex-col mx-1 px-1 gap-2 overflow-auto">
-          @for (card of list.cards; track $index) {
-          <div
-            class="text-sm py-2 group px-3 rounded-lg bg-cc-task-card flex w-full outline outline-2 outline-transparent hover:outline-cc-accent focus:outline-cc-accent">
-            <div class="flex flex-col w-full gap-1">
-              <p class="w-full text-start pb-1">{{card.title}}</p>
-              @if (card.description || card.assignedToName) {
-              <div class="flex w-full items-center justify-between mt-1">
-                <div class="flex items-center text-cc-subtle">
-                  @if (card.description) {
-                  <app-text-icon dimensions="size-4"></app-text-icon>
-                  }
-                </div>
-                @if (card.assignedToName) {
-                <div
-                  class="size-6 bg-cc-accent text-white rounded-full flex justify-center items-center text-[10px] font-bold shrink-0 shadow-sm"
-                  [title]="'Assigned to ' + card.assignedToName">
-                  {{card.assignedToName.charAt(0).toUpperCase()}}
-                </div>
-                }
-              </div>
-              }
-            </div>
-            <div class="size-5 flex justify-center items-center">
-              <app-pencil-icon dimensions="size-3"
-                class="group-hover:visible group-focus:visible invisible text-cc-subtle"></app-pencil-icon>
-            </div>
-          </div>
-          }
-        </div>
-      </app-task-card-list>
-    </div>
-    }
-  </app-task-card-list>
+    </app-task-card-list>
+  </div>
   }
 </div>
 

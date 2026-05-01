@@ -1,38 +1,52 @@
 <div class="{{board? board.base : ''}}">
   <nav id="nav-bar"
-    class="{{boardPage && board? 'text-cc-boardpage-nav-text bg-cc-boardpage-nav-bg duration-200' : 'bg-cc-base text-cc-subtle'}} flex font-semibold justify-between p-2 border-b border-cc-border/15">
-    <div class="flex gap-1">
-   
-      <a routerLink="/" class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-2 rounded-sm" aria-label="Back to home">
-        <div id="trello-logo" class="{{boardPage && board? 'board-logo-filter' : 'logo-filter'}} w-[72px] h-8"></div>
+    class="{{boardPage && board? 'text-white bg-black/40 backdrop-blur-md' : 'bg-cc-base text-cc-subtle'}} flex items-center justify-between px-6 py-3 border-b border-white/5 transition-all duration-500">
+    
+    <div class="flex items-center gap-6">
+      <!-- Logo Container -->
+      <a routerLink="/" class="group transition-transform hover:scale-105" aria-label="Back to home">
+        <div id="trello-logo" class="{{boardPage && board? 'board-logo-filter' : 'logo-filter'}} w-[80px] h-9 opacity-90 group-hover:opacity-100 transition-opacity"></div>
       </a>
-      <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
-      <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
-      @if (authService.isTechLead) {
-        <a routerLink="/approvals" 
-          class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-3 py-1 rounded-sm text-sm flex items-center transition-colors relative"
-          [routerLinkActive]="'bg-cc-accent/20 text-cc-accent'">
-          Approvals
-          @if (pendingCount > 0) {
-            <span class="absolute -top-1 -right-1 flex h-4 w-4">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-4 w-4 bg-rose-600 text-[10px] text-white items-center justify-center font-bold">
-                {{pendingCount}}
+
+      <!-- Navigation Links -->
+      <div class="flex items-center gap-1">
+        <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
+        <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
+        
+        @if (authService.isTechLead) {
+          <a routerLink="/approvals" 
+            class="px-4 py-1.5 rounded-xl text-[11px] font-black uppercase tracking-wider flex items-center transition-all duration-300 relative group
+            {{boardPage && board? 'hover:bg-white/10' : 'hover:bg-cc-overlay'}}"
+            [routerLinkActive]="'bg-cc-accent text-white shadow-lg shadow-cc-accent/20'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            Contrôle
+            @if (pendingCount > 0) {
+              <span class="absolute -top-1 -right-1 flex h-5 w-5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-5 w-5 bg-gradient-to-tr from-rose-500 to-red-600 text-[10px] text-white items-center justify-center font-black border-2 border-black/20">
+                  {{pendingCount}}
+                </span>
               </span>
-            </span>
-          }
-        </a>
-        <app-create-dropdown class="ms-1" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
-      }
+            }
+          </a>
+          <app-create-dropdown class="ms-2" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
+        }
+      </div>
     </div>
-    <div class="flex items-center gap-2">
+
+    <!-- Right Side Tools -->
+    <div class="flex items-center gap-4">
       <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
+      
+      <div class="h-6 w-px bg-white/10 mx-1"></div>
+
       <button 
         *ngIf="authService.isLoggedIn"
         (click)="logout()"
-        class="ml-2 rounded-sm px-2 py-1 text-xs font-bold uppercase tracking-tight text-white transition-colors hover:bg-red-600 bg-red-500"
+        class="group flex items-center gap-2 px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white transition-all duration-300 hover:bg-rose-500 bg-white/5 border border-white/10"
       >
-        Logout
+        <span>Logout</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="group-hover:translate-x-1 transition-transform"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
       </button>
     </div>
   </nav>

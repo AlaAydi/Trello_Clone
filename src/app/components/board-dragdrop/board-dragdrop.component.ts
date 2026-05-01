@@ -50,23 +50,28 @@ export class BoardDragdropComponent {
           const status = card.approvalStatus?.toString().trim().toUpperCase();
           if (isDone) {
             if (status === 'APPROVED') {
-              card.cardColor = 'bg-green-500 text-white border-none';
-              card.statusText = 'Acceptée';
+              card.cardColor = 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-emerald-500/20';
+              card.statusText = 'Approuvée';
               card.statusIcon = 'check';
-              card.message = 'Cette tâche a été validée.';
+              card.message = 'Cette tâche a passé le contrôle qualité avec succès.';
+              card.badgeClass = 'bg-white/20 text-white';
             } else if (status === 'REJECTED') {
-              card.cardColor = 'bg-red-500 text-white border-none';
+              card.cardColor = 'bg-gradient-to-br from-rose-500 to-red-600 text-white shadow-rose-500/20';
               card.statusText = 'Refusée';
               card.statusIcon = 'x';
-              card.message = 'Tâche refusée par le Tech Lead.';
+              card.message = 'Des corrections sont nécessaires pour valider cette tâche.';
+              card.badgeClass = 'bg-white/20 text-white';
             } else {
-              card.cardColor = 'bg-orange-500 text-white border-none';
-              card.statusText = 'En attente';
+              card.cardColor = 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-orange-500/20';
+              card.statusText = 'En examen';
               card.statusIcon = 'clock';
-              card.message = 'Cette tâche est en attente de validation.';
+              card.message = 'L\'administrateur examine actuellement votre travail.';
+              card.badgeClass = 'bg-white/20 text-white';
             }
           } else {
-            card.cardColor = 'bg-cc-task-card';
+            card.cardColor = 'bg-cc-task-card border border-cc-border/5 hover:border-cc-accent/30 shadow-sm';
+            card.statusText = null;
+            card.badgeClass = 'bg-cc-accent/10 text-cc-accent';
           }
         });
       });

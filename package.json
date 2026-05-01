@@ -22,6 +22,7 @@
     "@stomp/stompjs": "^7.3.0",
     "rxjs": "~7.8.0",
     "sockjs-client": "^1.6.1",
+    "sweetalert2": "^11.26.24",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
@@ -30,6 +31,7 @@
     "@angular/cli": "^17.0.0",
     "@angular/compiler-cli": "^17.0.0",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^25.6.0",
     "@types/sockjs-client": "^1.5.4",
     "autoprefixer": "^10.4.17",
     "jasmine-core": "~5.1.0",

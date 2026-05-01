@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 import { AppService } from '../../services/app.service';
 import { AuthService } from '../../services/auth.service';
@@ -29,24 +30,38 @@ export default class ApprovalsComponent implements OnInit {
   }
 
   approve(taskId: number) {
-    console.log(">>> Frontend: Envoi de la demande d'APPROBATION pour la tâche ID:", taskId);
     this.appService.approveTask(taskId).subscribe({
       next: (res) => {
-        console.log(">>> Frontend: APPROBATION RÉUSSIE pour l'ID:", taskId, "Réponse du serveur:", res);
+        Swal.fire({
+          icon: 'success',
+          title: 'Tâche Approuvée',
+          text: 'Le développeur peut maintenant voir sa tâche validée.',
+          background: '#1a1a1a',
+          color: '#ffffff',
+          confirmButtonColor: '#10b981',
+          iconColor: '#10b981'
+        });
         this.loadPendingTasks();
       },
-      error: (err) => console.error(">>> Frontend: ÉCHEC de l'approbation pour l'ID:", taskId, err)
+      error: (err) => console.error("Error approving task", err)
     });
   }
 
   reject(taskId: number) {
-    console.log(">>> Frontend: Envoi de la demande de REFUS pour la tâche ID:", taskId);
     this.appService.rejectTask(taskId).subscribe({
       next: (res) => {
-        console.log(">>> Frontend: REFUS RÉUSSI pour l'ID:", taskId, "Réponse du serveur:", res);
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tâche Refusée',
+          text: 'La tâche a été renvoyée au développeur pour corrections.',
+          background: '#1a1a1a',
+          color: '#ffffff',
+          confirmButtonColor: '#f43f5e',
+          iconColor: '#f43f5e'
+        });
         this.loadPendingTasks();
       },
-      error: (err) => console.error(">>> Frontend: ÉCHEC du refus pour l'ID:", taskId, err)
+      error: (err) => console.error("Error rejecting task", err)
     });
   }
 }

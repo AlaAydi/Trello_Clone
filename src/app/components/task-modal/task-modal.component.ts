@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
+import Swal from 'sweetalert2';
 import { AppService } from '../../services/app.service';
 import { CommonModule } from '@angular/common';
 import { XmarkIconComponent } from "../../icons/xmark-icon/xmark-icon.component";
@@ -104,8 +105,27 @@ export class TaskModalComponent implements OnInit {
 
     this.updateTask(); // Call existing update logic
     
-    // Show confirmation popup
-    alert(`Cette tâche a été assignée à : ${devName}`);
+    // Show premium confirmation toast
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      background: '#1a1a1a',
+      color: '#ffffff',
+      didOpen: (toast: any) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+      }
+    });
+
+    Toast.fire({
+      icon: 'success',
+      title: 'Assignation réussie',
+      text: `La tâche est désormais sous la responsabilité de ${devName}`,
+      iconColor: '#10b981'
+    });
   }
 
   deleteTask() {
