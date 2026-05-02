@@ -40,7 +40,6 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
     return this.authService.user;
   }
 
-  /** Sync getter — true uniquement quand la session STOMP est établie */
   get isConnected(): boolean {
     return this.chatService.isConnected;
   }
@@ -114,6 +113,16 @@ export class ChatroomComponent implements OnInit, OnDestroy, AfterViewChecked {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  getDuration(connectedAt: Date): string {
+    const diffMs = new Date().getTime() - new Date(connectedAt).getTime();
+    const diffHrs = Math.floor(diffMs / 3600000);
+    const diffMins = Math.floor((diffMs % 3600000) / 60000);
+    if (diffHrs > 0) {
+      return `${diffHrs}h ${diffMins}m`;
+    }
+    return `${diffMins}m`;
   }
 
   getAvatarColor(email: string): string {
