@@ -14,34 +14,34 @@ import { CodeAnalyzerModalComponent } from "../code-analyzer-modal/code-analyzer
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-    selector: 'app-board-dragdrop',
-    standalone: true,
-    templateUrl: './board-dragdrop.component.html',
-    styleUrl: './board-dragdrop.component.css',
-    host: { 'class': 'h-full' },
-    imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        TaskCardListComponent,
-        CdkDrag,
-        CdkDropList,
-        CdkDropListGroup,
-        CdkDragHandle,
-        CdkDragPlaceholder,
-        CdkDragPreview,
-        ListOptionsComponent,
-        TaskModalComponent,
-        PencilIconComponent,
-        CdkMenu,
-        CdkMenuItem,
-        TextIconComponent,
-        TicketRoadmapModalComponent,
-        CodeAnalyzerModalComponent
-    ]
+  selector: 'app-board-dragdrop',
+  standalone: true,
+  templateUrl: './board-dragdrop.component.html',
+  styleUrl: './board-dragdrop.component.css',
+  host: { 'class': 'h-full' },
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    TaskCardListComponent,
+    CdkDrag,
+    CdkDropList,
+    CdkDropListGroup,
+    CdkDragHandle,
+    CdkDragPlaceholder,
+    CdkDragPreview,
+    ListOptionsComponent,
+    TaskModalComponent,
+    PencilIconComponent,
+    CdkMenu,
+    CdkMenuItem,
+    TextIconComponent,
+    TicketRoadmapModalComponent,
+    CodeAnalyzerModalComponent
+  ]
 })
 export class BoardDragdropComponent {
 
-  @Input() 
+  @Input()
   set board(value: any) {
     if (value && value.lists) {
       value.lists.forEach((list: any) => {
@@ -95,7 +95,7 @@ export class BoardDragdropComponent {
     this.selectedTicketForAi = {
       title: card.title,
       description: card.description || 'No description provided.',
-      priority: 'MEDIUM', 
+      priority: 'MEDIUM',
       labels: [],
       assignee: card.assignedToName,
       estimatedHours: 0
@@ -150,11 +150,11 @@ export class BoardDragdropComponent {
         }).subscribe({
           error: (err) => {
             console.error("Error updating list title", err);
-            list.title = oldTitle; 
+            list.title = oldTitle;
           }
         });
       }
-    }    
+    }
   }
 
   isDoneList(list: any): boolean {
@@ -181,7 +181,7 @@ export class BoardDragdropComponent {
     }
 
     const movedTask = container.data.cards[currentIndex];
-    
+
     if (this.authService.user?.role === 'DEVELOPER' && this.isDoneList(container.data)) {
       if (movedTask.approvalStatus !== 'APPROVED' && movedTask.approvalStatus !== 'REJECTED') {
         movedTask.approvalStatus = 'PENDING';

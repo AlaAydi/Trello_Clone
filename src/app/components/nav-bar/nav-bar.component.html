@@ -1,36 +1,43 @@
 <div class="{{board? board.base : ''}}">
   <nav id="nav-bar"
-    class="{{boardPage && board? 'text-cc-boardpage-nav-text bg-cc-boardpage-nav-bg duration-200' : 'bg-cc-base text-cc-subtle'}} flex font-semibold justify-between p-2 border-b border-cc-border/15">
-    <div class="flex gap-1">
-   
-      <a routerLink="/" class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-2 rounded-sm" aria-label="Back to home">
-        <div id="trello-logo" class="{{boardPage && board? 'board-logo-filter' : 'logo-filter'}} w-[72px] h-8"></div>
+    class="{{boardPage && board? 'bg-[#0d1117]/80 backdrop-blur-md' : 'bg-[#0d1117] text-[#c9d1d9]'}} flex items-center justify-between px-6 py-3 border-b border-[#30363d] transition-all duration-300">
+    
+    <div class="flex items-center gap-4">
+      <!-- Logo Container -->
+      <a routerLink="/" class="flex items-center hover:opacity-80 transition-opacity mr-2" aria-label="Back to home">
+        <div id="trello-logo" class="{{boardPage && board? 'board-logo-filter' : 'logo-filter'}} w-[80px] h-6 bg-contain bg-no-repeat opacity-90"></div>
       </a>
-      <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
-      <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
-      @if (authService.isTechLead) {
-        <a routerLink="/approvals" 
-          class="{{boardPage && board? 'hover:bg-cc-boardpage-menu-hover' : 'hover:bg-cc-overlay'}} px-3 py-1 rounded-sm text-sm flex items-center transition-colors relative"
-          [routerLinkActive]="'bg-cc-accent/20 text-cc-accent'">
-          Approvals
-          @if (pendingCount > 0) {
-            <span class="absolute -top-1 -right-1 flex h-4 w-4">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-4 w-4 bg-rose-600 text-[10px] text-white items-center justify-center font-bold">
-                {{pendingCount}}
-              </span>
-            </span>
-          }
-        </a>
-        <app-create-dropdown class="ms-1" [boardPage]="boardPage" [board]="board"></app-create-dropdown>
-      }
+
+      <!-- Navigation Links -->
+      <div class="flex items-center gap-1">
+        <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
+        <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
+        
+        @if (authService.isTechLead) {
+          <a routerLink="/approvals" 
+            class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-all hover:bg-white/5 relative"
+            [routerLinkActive]="'bg-amber-500/10 text-amber-500 border border-amber-500/20'">
+            Approvals
+            @if (pendingCount > 0) {
+              <span class="flex h-2 w-2 rounded-full bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></span>
+            }
+          </a>
+          <div class="h-4 w-[1px] bg-[#30363d] mx-2"></div>
+          <app-create-dropdown [boardPage]="boardPage" [board]="board"></app-create-dropdown>
+        }
+      </div>
     </div>
-    <div class="flex items-center gap-2">
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-4">
       <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
+      
+      <div class="h-4 w-[1px] bg-[#30363d]"></div>
+      
       <button 
         *ngIf="authService.isLoggedIn"
         (click)="logout()"
-        class="ml-2 rounded-sm px-2 py-1 text-xs font-bold uppercase tracking-tight text-white transition-colors hover:bg-red-600 bg-red-500"
+        class="px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[#f85149] hover:bg-[#f85149]/10 border border-[#f85149]/20 hover:border-[#f85149]/40 rounded-lg transition-all"
       >
         Logout
       </button>
