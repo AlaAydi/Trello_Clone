@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject, EventEmitter, Output } from '@angular/core';
 import { AppService } from '../../services/app.service';
 import { CommonModule } from '@angular/common';
 import { XmarkIconComponent } from "../../icons/xmark-icon/xmark-icon.component";
@@ -8,6 +8,7 @@ import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
 import { TrashIconComponent } from "../../icons/trash-icon/trash-icon.component";
 import { BoardService } from '../../services/board.service';
 import { AuthService } from '../../services/auth.service';
+import { AiIconComponent } from "../../icons/ai-icon/ai-icon.component";
 
 @Component({
     selector: 'app-task-modal',
@@ -21,13 +22,15 @@ import { AuthService } from '../../services/auth.service';
         FormsModule,
         ReactiveFormsModule,
         TextIconComponent,
-        TrashIconComponent
+        TrashIconComponent,
+        AiIconComponent
     ]
 })
 export class TaskModalComponent implements OnInit {
 
   @Input({required: true}) taskList: any;
   @Input({ required: true }) taskIndex: any;
+  @Output() roadmapRequested = new EventEmitter<any>();
   task: any;
   developers: any[] = [];
   appService = inject(AppService);
@@ -122,6 +125,11 @@ export class TaskModalComponent implements OnInit {
 
   setScroll() {
     this.boardService.setScroll(false);
+  }
+
+  generateAiRoadmap() {
+    this.roadmapRequested.emit(this.task);
+    this.closeModal();
   }
 
 }

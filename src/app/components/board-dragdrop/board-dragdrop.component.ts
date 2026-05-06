@@ -12,6 +12,7 @@ import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
 import { TicketRoadmapModalComponent } from "../ticket-roadmap-modal/ticket-roadmap-modal.component";
 import { CodeAnalyzerModalComponent } from "../code-analyzer-modal/code-analyzer-modal.component";
 import { AuthService } from '../../services/auth.service';
+import { AiIconComponent } from "../../icons/ai-icon/ai-icon.component";
 
 @Component({
   selector: 'app-board-dragdrop',
@@ -36,7 +37,8 @@ import { AuthService } from '../../services/auth.service';
     CdkMenuItem,
     TextIconComponent,
     TicketRoadmapModalComponent,
-    CodeAnalyzerModalComponent
+    CodeAnalyzerModalComponent,
+    AiIconComponent
   ]
 })
 export class BoardDragdropComponent {
@@ -92,6 +94,18 @@ export class BoardDragdropComponent {
 
   openRoadmap(event: MouseEvent, card: any) {
     event.stopPropagation();
+    this.selectedTicketForAi = {
+      title: card.title,
+      description: card.description || 'No description provided.',
+      priority: 'MEDIUM',
+      labels: [],
+      assignee: card.assignedToName,
+      estimatedHours: 0
+    };
+    this.showRoadmapModal = true;
+  }
+
+  onRoadmapRequested(card: any) {
     this.selectedTicketForAi = {
       title: card.title,
       description: card.description || 'No description provided.',
