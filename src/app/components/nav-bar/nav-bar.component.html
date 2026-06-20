@@ -1,22 +1,20 @@
 <div class="{{board? board.base : ''}}">
   <nav id="nav-bar"
     class="{{boardPage && board? 'bg-[#0d1117]/80 backdrop-blur-md' : 'bg-[#0d1117] text-[#c9d1d9]'}} flex items-center justify-between px-6 py-3 border-b border-[#30363d] transition-all duration-300">
-    
+
     <div class="flex items-center gap-4">
-      <!-- Logo Container -->
       <a routerLink="/" class="flex items-center hover:opacity-80 transition-opacity mr-2" aria-label="Back to home">
         <span class="text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 drop-shadow-sm">
           Task<span class="text-white font-light">Flow</span>
         </span>
       </a>
 
-      <!-- Navigation Links -->
       <div class="flex items-center gap-1">
         <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
         <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
-        
+
         @if (authService.isTechLead) {
-          <a routerLink="/approvals" 
+          <a routerLink="/approvals"
             class="px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider flex items-center gap-2 transition-all hover:bg-white/5 relative"
             [routerLinkActive]="'bg-amber-500/10 text-amber-500 border border-amber-500/20'">
             Approvals
@@ -30,13 +28,12 @@
       </div>
     </div>
 
-    <!-- Right Side Actions -->
     <div class="flex items-center gap-4">
       <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
-      
+
       <div class="h-4 w-[1px] bg-[#30363d]"></div>
-      
-      <button 
+
+      <button
         *ngIf="authService.isLoggedIn"
         (click)="logout()"
         class="px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-[#f85149] hover:bg-[#f85149]/10 border border-[#f85149]/20 hover:border-[#f85149]/40 rounded-lg transition-all"

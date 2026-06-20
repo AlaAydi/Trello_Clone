@@ -30,6 +30,10 @@ export class AuthService {
         return this._user?.role === 'TECH_LEAD';
     }
 
+    get isSuperAdmin(): boolean {
+        return this._user?.role === 'SUPER_ADMIN';
+    }
+
     login(email: string, password: string): Observable<any> {
         return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
             tap(response => {

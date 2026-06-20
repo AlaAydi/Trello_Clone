@@ -36,9 +36,13 @@ export class LoginComponent {
       const { email, password } = this.loginForm.value;
 
       this.authService.login(email, password).subscribe({
-        next: () => {
+        next: (response) => {
           this.loading = false;
-          window.location.href = '/boards';
+          if (response.role === 'SUPER_ADMIN') {
+            window.location.href = '/super-admin';
+          } else {
+            window.location.href = '/boards';
+          }
         },
         error: (err) => {
           this.loading = false;
