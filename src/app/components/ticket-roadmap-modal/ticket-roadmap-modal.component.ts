@@ -10,24 +10,21 @@ import { AiTicketRoadmapService, TicketData, RoadmapResponse } from '../../servi
     <div class="roadmap-modal-overlay" (click)="onOverlayClick($event)">
       <div class="roadmap-modal">
 
-        <!-- HEADER -->
         <div class="modal-header">
           <div class="header-left">
-            <span class="ai-badge">🤖 AI Roadmap</span>
+            <span class="ai-badge-premium">MODERN ARCHITECT ROADMAP</span>
             <h2>{{ ticket.title }}</h2>
           </div>
           <button class="close-btn" (click)="close.emit()">✕</button>
         </div>
 
-        <!-- LOADING STATE -->
         @if (isLoading) {
-          <div class="loading-state">
+          <div class="loading-state-premium">
             <div class="spinner"></div>
-            <p>Analyzing ticket and generating roadmap...</p>
+            <p>Antigravity AI is architecting your solution...</p>
           </div>
         }
 
-        <!-- ERROR STATE -->
         @if (error && !isLoading) {
           <div class="error-state">
             <span class="error-icon">⚠️</span>
@@ -36,78 +33,57 @@ import { AiTicketRoadmapService, TicketData, RoadmapResponse } from '../../servi
           </div>
         }
 
-        <!-- ROADMAP CONTENT -->
         @if (roadmap && !isLoading) {
-          <div class="roadmap-content">
+          <div class="roadmap-content-modern">
 
-            <!-- SUMMARY CARDS -->
-            <div class="summary-cards">
-              <div class="card complexity" [class]="'complexity-' + roadmap.complexity.toLowerCase()">
+            <div class="overview-grid">
+              <div class="overview-card">
                 <label>Complexity</label>
-                <span>{{ roadmap.complexity }}</span>
+                <span class="value">{{ roadmap.complexity }}</span>
               </div>
-              <div class="card estimation">
-                <label>Estimation</label>
-                <span>{{ roadmap.totalEstimation }}</span>
+              <div class="overview-card">
+                <label>Estimated Time</label>
+                <span class="value">{{ roadmap.estimatedTime }}</span>
               </div>
-              <div class="card tech-stack">
-                <label>Tech Stack</label>
-                <div class="tags">
-                  @for (tech of roadmap.techStack; track tech) {
-                    <span class="tag">{{ tech }}</span>
-                  }
+              <div class="overview-card">
+                <label>Technical Summary</label>
+                <p>{{ roadmap.summary }}</p>
+              </div>
+            </div>
+
+            <div class="section-glass">
+              <h3>Technical Strategy</h3>
+              <div class="strategy-grid">
+                <div class="strategy-item">
+                  <label>Frontend Strategy</label>
+                  <p>{{ roadmap.architecture.frontend }}</p>
+                </div>
+                <div class="strategy-item">
+                  <label>Backend Strategy</label>
+                  <p>{{ roadmap.architecture.backend }}</p>
                 </div>
               </div>
             </div>
 
-            <!-- TICKET SUMMARY -->
             <div class="section">
-              <h3>📋 Summary</h3>
-              <p class="summary-text">{{ roadmap.ticketSummary }}</p>
-            </div>
-
-            <!-- ROADMAP STEPS -->
-            <div class="section">
-              <h3>🗺️ Implementation Roadmap</h3>
-              <div class="steps-timeline">
-                @for (step of roadmap.steps; track step.order) {
-                  <div class="step" [class]="'phase-' + step.phase.toLowerCase()">
-                    <div class="step-header">
-                      <div class="step-number">{{ step.order }}</div>
-                      <div class="step-meta">
-                        <span class="phase-badge">{{ step.phase }}</span>
-                        <span class="time-estimate">⏱ {{ step.estimatedTime }}</span>
-                      </div>
+              <h3>Implementation Phases</h3>
+              <div class="phases-container">
+                @for (phase of roadmap.phases; track phase.name; let pi = $index) {
+                  <div class="phase-card">
+                    <div class="phase-header">
+                      <span class="phase-number">Phase {{ pi + 1 }}</span>
+                      <h4>{{ phase.name }}</h4>
                     </div>
-                    <div class="step-body">
-                      <h4>{{ step.title }}</h4>
-                      <p>{{ step.description }}</p>
-
-                      @if (step.technicalDetails?.length) {
-                        <div class="technical-details">
-                          <strong>Technical Details:</strong>
-                          <ul>
-                            @for (detail of step.technicalDetails; track detail) {
-                              <li>{{ detail }}</li>
-                            }
-                          </ul>
-                        </div>
-                      }
-
-                      @if (step.tips?.length) {
-                        <div class="tips">
-                          <strong>💡 Tips:</strong>
-                          <ul>
-                            @for (tip of step.tips; track tip) {
-                              <li>{{ tip }}</li>
-                            }
-                          </ul>
-                        </div>
-                      }
-
-                      @if (step.deliverable) {
-                        <div class="deliverable">
-                          <strong>✅ Deliverable:</strong> {{ step.deliverable }}
+                    <div class="steps-list">
+                      @for (step of phase.steps; track step.title) {
+                        <div class="step-item">
+                          <div class="step-content">
+                            <div class="step-title-row">
+                              <h5>{{ step.title }}</h5>
+                              <span class="step-duration">{{ step.duration }}</span>
+                            </div>
+                            <p>{{ step.description }}</p>
+                          </div>
                         </div>
                       }
                     </div>
@@ -116,43 +92,44 @@ import { AiTicketRoadmapService, TicketData, RoadmapResponse } from '../../servi
               </div>
             </div>
 
-            <!-- RISKS & SUGGESTIONS -->
-            <div class="risks-suggestions">
-              @if (roadmap.potentialRisks?.length) {
-                 <div class="section half">
-                  <h3>⚠️ Potential Risks</h3>
-                  <ul class="risk-list">
-                    @for (risk of roadmap.potentialRisks; track risk) {
-                      <li>{{ risk }}</li>
-                    }
-                  </ul>
-                </div>
-              }
-              @if (roadmap.suggestions?.length) {
-                <div class="section half">
-                  <h3>💡 Suggestions</h3>
-                  <ul class="suggestion-list">
-                    @for (s of roadmap.suggestions; track s) {
-                      <li>{{ s }}</li>
-                    }
-                  </ul>
-                </div>
-              }
+            <div class="grid-2-col">
+              <div class="section-glass">
+                <h3>🛡️ Security Checklist</h3>
+                <ul class="check-list">
+                  @for (item of roadmap.securityChecklist; track item) {
+                    <li>{{ item }}</li>
+                  }
+                </ul>
+              </div>
+              <div class="section-glass">
+                <h3>🧪 Testing Strategy</h3>
+                <p>{{ roadmap.testingStrategy }}</p>
+              </div>
             </div>
 
-            <!-- DEFINITION OF DONE -->
-            @if (roadmap.definition_of_done?.length) {
-               <div class="section">
-                <h3>✅ Definition of Done</h3>
-                <div class="dod-list">
-                  @for (dod of roadmap.definition_of_done; track dod) {
-                    <div class="dod-item">
-                      <input type="checkbox"> {{ dod }}
+            <div class="section">
+              <h3>⚠️ Risks & Mitigations</h3>
+              <div class="risks-grid">
+                @for (r of roadmap.risks; track r.risk) {
+                  <div class="risk-card">
+                    <strong>{{ r.risk }}</strong>
+                    <div class="mitigation">
+                      <label>Mitigation:</label>
+                      <span>{{ r.mitigation }}</span>
                     </div>
-                  }
-                </div>
+                  </div>
+                }
               </div>
-            }
+            </div>
+
+            <div class="section">
+              <h3>✅ Success Criteria (DoD)</h3>
+              <div class="dod-chips">
+                @for (criteria of roadmap.successCriteria; track criteria) {
+                  <span class="dod-chip">{{ criteria }}</span>
+                }
+              </div>
+            </div>
           </div>
         }
 
@@ -162,75 +139,59 @@ import { AiTicketRoadmapService, TicketData, RoadmapResponse } from '../../servi
   styles: [`
     .roadmap-modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6); display: flex; align-items: center;
-      justify-content: center; z-index: 1000;
+      background: rgba(10, 10, 15, 0.8); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; z-index: 2000;
     }
     .roadmap-modal {
-      background: #fff; border-radius: 12px; width: 90%; max-width: 900px;
-      max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      color: #333;
+      background: #1e293b; color: #f1f5f9; border-radius: 20px;
+      width: 95%; max-width: 900px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
     }
     .modal-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      padding: 24px; border-bottom: 1px solid #eee; position: sticky; top: 0;
-      background: #fff; z-index: 10;
+      padding: 24px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(30, 41, 59, 0.95); position: sticky; top: 0; z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
-    .ai-badge {
-      background: #6c5ce7; color: white; padding: 4px 12px;
-      border-radius: 20px; font-size: 12px; margin-bottom: 8px; display: inline-block;
+    .ai-badge-premium {
+      font-size: 10px; font-weight: 800; letter-spacing: 1px;
+      background: rgba(99, 102, 241, 0.2); color: #818cf8;
+      padding: 4px 10px; border-radius: 6px; display: inline-block; margin-bottom: 6px;
     }
-    .modal-header h2 { margin: 4px 0 0; font-size: 18px; }
-    .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: #666; }
-    .loading-state { text-align: center; padding: 60px; }
-    .spinner {
-      width: 40px; height: 40px; border: 4px solid #f3f3f3;
-      border-top: 4px solid #6c5ce7; border-radius: 50%;
-      animation: spin 1s linear infinite; margin: 0 auto 16px;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .roadmap-content { padding: 24px; }
-    .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-    .card { background: #f8f9fa; border-radius: 8px; padding: 16px; }
-    .card label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #888; display: block; margin-bottom: 6px; }
-    .card span { font-size: 16px; font-weight: 600; }
-    .complexity-simple { border-left: 4px solid #2ecc71; }
-    .complexity-medium { border-left: 4px solid #f39c12; }
-    .complexity-complex { border-left: 4px solid #e67e22; }
-    .complexity-very_complex { border-left: 4px solid #e74c3c; }
-    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-    .tag { background: #e8f0fe; color: #3367d6; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-    .section { margin-bottom: 32px; }
-    .section h3 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #333; }
-    .summary-text { color: #555; line-height: 1.6; }
-    .steps-timeline { display: flex; flex-direction: column; gap: 16px; }
-    .step { border: 1px solid #eee; border-radius: 10px; overflow: hidden; }
-    .step-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f8f9fa; }
-    .step-number {
-      width: 32px; height: 32px; border-radius: 50%; background: #6c5ce7;
-      color: white; display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 14px; flex-shrink: 0;
-    }
-    .step-meta { display: flex; align-items: center; gap: 12px; flex: 1; }
-    .phase-badge {
-      background: #6c5ce7; color: white; padding: 2px 10px;
-      border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
-    }
-    .time-estimate { color: #666; font-size: 13px; }
-    .step-body { padding: 16px; }
-    .step-body h4 { margin: 0 0 8px; font-size: 15px; }
-    .step-body p { color: #555; margin: 0 0 12px; line-height: 1.5; }
-    .technical-details, .tips { margin-top: 12px; font-size: 13px; }
-    .technical-details ul, .tips ul { margin: 6px 0 0; padding-left: 20px; }
-    .technical-details li, .tips li { margin-bottom: 4px; color: #555; }
-    .deliverable { margin-top: 12px; padding: 8px 12px; background: #f0fdf4; border-radius: 6px; font-size: 13px; color: #333; }
-    .risks-suggestions { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .half { margin-bottom: 0 !important; }
-    .risk-list li { color: #e74c3c; margin-bottom: 6px; font-size: 14px; }
-    .suggestion-list li { color: #27ae60; margin-bottom: 6px; font-size: 14px; }
-    .dod-list { display: flex; flex-direction: column; gap: 8px; }
-    .dod-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #444; }
-    .error-state { text-align: center; padding: 40px; color: #e74c3c; }
-    .error-state button { margin-top: 12px; padding: 8px 20px; background: #6c5ce7; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    .roadmap-content-modern { padding: 24px; }
+    .overview-grid { display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 16px; margin-bottom: 24px; }
+    .overview-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 16px; border-radius: 12px; }
+    .overview-card label { display: block; font-size: 11px; color: #64748b; text-transform: uppercase; margin-bottom: 6px; }
+    .overview-card .value { font-size: 16px; font-weight: 700; color: #f1f5f9; }
+    .overview-card p { margin: 0; font-size: 13px; color: #94a3b8; line-height: 1.4; }
+    .section-glass { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+    .section h3, .section-glass h3 { font-size: 15px; font-weight: 700; color: #f8fafc; margin-bottom: 16px; }
+    .strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .strategy-item label { font-size: 11px; font-weight: 600; color: #818cf8; display: block; margin-bottom: 4px; }
+    .strategy-item p { font-size: 13px; color: #cbd5e1; line-height: 1.5; margin: 0; }
+    .phases-container { display: flex; flex-direction: column; gap: 16px; }
+    .phase-card { background: rgba(255,255,255,0.02); border-left: 4px solid #6366f1; border-radius: 8px; padding: 16px; }
+    .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .phase-number { font-size: 9px; font-weight: 800; background: #6366f1; color: white; padding: 2px 6px; border-radius: 4px; }
+    .phase-header h4 { margin: 0; font-size: 14px; font-weight: 700; }
+    .steps-list { display: flex; flex-direction: column; gap: 12px; }
+    .step-item { display: flex; gap: 12px; }
+    .step-content { flex: 1; }
+    .step-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .step-title-row h5 { margin: 0; font-size: 13px; font-weight: 600; color: #f1f5f9; }
+    .step-duration { font-size: 11px; color: #64748b; }
+    .step-content p { margin: 0; font-size: 12px; color: #94a3b8; line-height: 1.4; }
+    .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .check-list { list-style: none; padding: 0; margin: 0; }
+    .check-list li { padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #cbd5e1; font-size: 12px; }
+    .risks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .risk-card { background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.1); border-radius: 10px; padding: 12px; font-size: 13px; }
+    .risk-card strong { display: block; margin-bottom: 8px; color: #f87171; }
+    .mitigation label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; margin-bottom: 2px; }
+    .mitigation span { font-size: 12px; color: #cbd5e1; }
+    .dod-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dod-chip { background: rgba(16, 185, 129, 0.1); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
   `]
 })
 export class TicketRoadmapModalComponent implements OnInit {
@@ -258,7 +219,12 @@ export class TicketRoadmapModalComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        this.error = `Failed to generate roadmap: ${err.message}`;
+        console.error('AI Roadmap Error:', err);
+        if (err.message?.includes('503')) {
+          this.error = "L'IA est actuellement surchargée. Veuillez réessayer dans quelques instants.";
+        } else {
+          this.error = "Impossible de générer la roadmap technique. Veuillez réessayer plus tard.";
+        }
         this.isLoading = false;
       }
     });

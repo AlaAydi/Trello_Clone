@@ -12,26 +12,35 @@ export interface TicketData {
 }
 
 export interface RoadmapStep {
-  order: number;
-  phase: string;
   title: string;
   description: string;
-  estimatedTime: string;
-  technicalDetails: string[];
-  dependencies: string[];
-  tips: string[];
-  deliverable: string;
+  duration: string;
+}
+
+export interface RoadmapPhase {
+  name: string;
+  steps: RoadmapStep[];
+}
+
+export interface RoadmapRisk {
+  risk: string;
+  mitigation: string;
 }
 
 export interface RoadmapResponse {
-  ticketSummary: string;
-  complexity: 'SIMPLE' | 'MEDIUM' | 'COMPLEX' | 'VERY_COMPLEX';
-  totalEstimation: string;
-  techStack: string[];
-  steps: RoadmapStep[];
-  potentialRisks: string[];
-  suggestions: string[];
-  definition_of_done: string[];
+  taskTitle: string;
+  summary: string;
+  complexity: string;
+  estimatedTime: string;
+  architecture: {
+    frontend: string;
+    backend: string;
+  };
+  phases: RoadmapPhase[];
+  securityChecklist: string[];
+  testingStrategy: string;
+  risks: RoadmapRisk[];
+  successCriteria: string[];
 }
 
 @Injectable({
@@ -48,23 +57,14 @@ export class AiTicketRoadmapService {
   }
 
   private async callAI(ticket: TicketData): Promise<RoadmapResponse> {
-
-    const prompt = this.buildRoadmapPrompt(ticket);
-
+    // We send a simple TaskRequest to the backend
+    const taskDescription = `Title: ${ticket.title}\nDescription: ${ticket.description}\nPriority: ${ticket.priority}`;
+    
     const body = {
-      contents: [
-        {
-          parts: [
-            {
-              text: this.getSystemPrompt() + "\n\n" + prompt
-            }
-          ]
-        }
-      ]
+      task: taskDescription
     };
 
     try {
-
       const response = await fetch(this.API_URL, {
         method: 'POST',
         headers: {
@@ -78,12 +78,10 @@ export class AiTicketRoadmapService {
         throw new Error(`AI API Error ${response.status}: ${errorText}`);
       }
 
-      const data = await response.json();
 
-      const rawText =
-        data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-      return this.parseRoadmapResponse(rawText);
+      const rawJson = await response.text();
+      
+      return this.parseRoadmapResponse(rawJson);
 
     } catch (error) {
       console.error('AI Roadmap Error:', error);
@@ -91,49 +89,17 @@ export class AiTicketRoadmapService {
     }
   }
 
-  private getSystemPrompt(): string {
-    return `You are an expert software architect specialized in Angular and Spring Boot.
-Always return ONLY a valid JSON object describing the roadmap.`;
-  }
-
-  private buildRoadmapPrompt(ticket: TicketData): string {
-    return `
-Ticket title: ${ticket.title}
-
-Description:
-${ticket.description}
-
-Priority: ${ticket.priority}
-
-Generate a detailed development roadmap.
-`;
-  }
-
   private parseRoadmapResponse(rawText: string): RoadmapResponse {
-
     try {
-
       const clean = rawText
         .replace(/```json/g, '')
         .replace(/```/g, '')
         .trim();
 
       return JSON.parse(clean);
-
     } catch (e) {
-
       console.error("Roadmap parse error", e);
-
-      return {
-        ticketSummary: 'Parsing error',
-        complexity: 'MEDIUM',
-        totalEstimation: '',
-        techStack: [],
-        steps: [],
-        potentialRisks: [],
-        suggestions: [],
-        definition_of_done: []
-      };
+      throw new Error("Impossible de parser la réponse de l'IA. Veuillez réessayer.");
     }
   }
 }

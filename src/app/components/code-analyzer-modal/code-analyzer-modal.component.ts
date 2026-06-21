@@ -118,8 +118,7 @@ import {
               }
             </div>
 
-            <!-- ISSUES SECTION -->
-            @if (analysis.issues?.length) {
+            @if (analysis.issues.length) {
               <div class="section">
                 <div class="section-header">
                   <h3>🐛 Issues Found</h3>
@@ -174,7 +173,7 @@ import {
 
             <!-- STRENGTHS -->
             <div class="strengths-improvements">
-              @if (analysis.strengths?.length) {
+              @if (analysis.strengths.length) {
                 <div class="section">
                   <h3>✅ Strengths</h3>
                   <ul class="green-list">
@@ -184,7 +183,7 @@ import {
                   </ul>
                 </div>
               }
-              @if (analysis.improvements?.length) {
+              @if (analysis.improvements.length) {
                 <div class="section">
                   <h3>🔧 Priority Improvements</h3>
                   <ul class="orange-list">
@@ -197,7 +196,7 @@ import {
             </div>
 
             <!-- REFACTORED EXAMPLES -->
-            @if (analysis.refactoredSnippets?.length) {
+            @if (analysis.refactoredSnippets.length) {
               <div class="section">
                 <h3>💡 Refactoring Examples</h3>
                 @for (snippet of analysis.refactoredSnippets; track snippet.title) {
@@ -251,7 +250,6 @@ import {
     .ticket-ref { font-size: 12px; color: #888; }
     .close-btn { background: none; border: none; font-size: 20px; cursor: pointer; }
 
-    /* Code Input */
     .code-input-panel { padding: 24px; }
     .language-selector, .context-input { margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
     .language-selector label, .context-input label { font-size: 13px; color: #666; white-space: nowrap; }
@@ -269,7 +267,6 @@ import {
     }
     .analyze-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* Loading */
     .loading-panel { text-align: center; padding: 60px; }
     .analyzing-animation { display: flex; align-items: flex-end; justify-content: center; gap: 6px; margin-bottom: 24px; height: 40px; }
     .bar {
@@ -278,7 +275,6 @@ import {
     }
     @keyframes equalizer { 0% { height: 8px; } 100% { height: 40px; } }
 
-    /* Score Header */
     .analysis-results { padding: 24px; }
     .score-header {
       display: flex; align-items: center; gap: 40px;

@@ -16,6 +16,13 @@ export interface ChatMessage {
   type: 'CHAT' | 'JOIN' | 'LEAVE';
 }
 
+export interface OnlineUser {
+  name: string;
+  email: string;
+  role: string;
+  connectedAt: Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +33,7 @@ export class ChatService {
   private stompClient: Client | null = null;
   private messagesSubject = new BehaviorSubject<ChatMessage[]>([]);
   private connectedSubject = new BehaviorSubject<boolean>(false);
-  private onlineUsersSubject = new BehaviorSubject<string[]>([]);
+  private onlineUsersSubject = new BehaviorSubject<OnlineUser[]>([]);
 
   messages$ = this.messagesSubject.asObservable();
   connected$ = this.connectedSubject.asObservable();
@@ -63,25 +70,68 @@ export class ChatService {
       onConnect: () => {
         this.connectedSubject.next(true);
 
-        // Subscribe to chatroom topic
+        this.onlineUsersSubject.next([{
+           name: user.fullName,
+           email: user.email,
+           role: user.role,
+           connectedAt: new Date()
+        }]);
+
+        // Get online users from backend
+        this.getOnlineUsers().subscribe({
+          next: (users) => {
+            // Merge with current user
+            const current = this.onlineUsersSubject.getValue();
+            const merged = [...users];
+            if (!merged.find(u => u.email === user.email)) {
+              merged.push(current[0]);
+            }
+            this.onlineUsersSubject.next(merged);
+          },
+          error: (err) => console.error('[Chat] Failed to load online users:', err)
+        });
+
         this.stompClient!.subscribe('/topic/chatroom', (message: IMessage) => {
           const chatMsg: ChatMessage = JSON.parse(message.body);
           const currentMessages = this.messagesSubject.getValue();
 
           if (chatMsg.type === 'JOIN') {
-            // Add system notification
             const joinMsg: ChatMessage = {
               ...chatMsg,
               content: `${chatMsg.senderName} a rejoint le chat`,
               type: 'JOIN'
             };
             this.messagesSubject.next([...currentMessages, joinMsg]);
-            // Add to online users
+            
             const users = this.onlineUsersSubject.getValue();
-            if (!users.includes(chatMsg.senderName)) {
-              this.onlineUsersSubject.next([...users, chatMsg.senderName]);
+            if (!users.find(u => u.email === chatMsg.senderEmail)) {
+              this.onlineUsersSubject.next([...users, {
+                 name: chatMsg.senderName,
+                 email: chatMsg.senderEmail,
+                 role: chatMsg.senderRole,
+                 connectedAt: new Date()
+              }]);
             }
+          } else if (chatMsg.type === 'LEAVE') {
+            const leaveMsg: ChatMessage = {
+              ...chatMsg,
+              content: `${chatMsg.senderName} a quitté le chat`,
+              type: 'LEAVE'
+            };
+            this.messagesSubject.next([...currentMessages, leaveMsg]);
+
+            const users = this.onlineUsersSubject.getValue();
+            this.onlineUsersSubject.next(users.filter(u => u.email !== chatMsg.senderEmail));
           } else {
+            const users = this.onlineUsersSubject.getValue();
+            if (!users.find(u => u.email === chatMsg.senderEmail)) {
+              this.onlineUsersSubject.next([...users, {
+                 name: chatMsg.senderName,
+                 email: chatMsg.senderEmail,
+                 role: chatMsg.senderRole,
+                 connectedAt: new Date()
+              }]);
+            }
             this.messagesSubject.next([...currentMessages, chatMsg]);
           }
         });
@@ -153,6 +203,13 @@ export class ChatService {
       Authorization: `Bearer ${this.authService.user?.token ?? ''}`
     });
     return this.http.get<ChatMessage[]>(`${this.apiUrl}/history`, { headers });
+  }
+
+  getOnlineUsers(): Observable<OnlineUser[]> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.authService.user?.token ?? ''}`
+    });
+    return this.http.get<OnlineUser[]>(`${this.apiUrl}/online-users`, { headers });
   }
 
   disconnect(): void {

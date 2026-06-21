@@ -12,36 +12,38 @@ import { TextIconComponent } from "../../icons/text-icon/text-icon.component";
 import { TicketRoadmapModalComponent } from "../ticket-roadmap-modal/ticket-roadmap-modal.component";
 import { CodeAnalyzerModalComponent } from "../code-analyzer-modal/code-analyzer-modal.component";
 import { AuthService } from '../../services/auth.service';
+import { AiIconComponent } from "../../icons/ai-icon/ai-icon.component";
 
 @Component({
-    selector: 'app-board-dragdrop',
-    standalone: true,
-    templateUrl: './board-dragdrop.component.html',
-    styleUrl: './board-dragdrop.component.css',
-    host: { 'class': 'h-full' },
-    imports: [
-        ReactiveFormsModule,
-        FormsModule,
-        TaskCardListComponent,
-        CdkDrag,
-        CdkDropList,
-        CdkDropListGroup,
-        CdkDragHandle,
-        CdkDragPlaceholder,
-        CdkDragPreview,
-        ListOptionsComponent,
-        TaskModalComponent,
-        PencilIconComponent,
-        CdkMenu,
-        CdkMenuItem,
-        TextIconComponent,
-        TicketRoadmapModalComponent,
-        CodeAnalyzerModalComponent
-    ]
+  selector: 'app-board-dragdrop',
+  standalone: true,
+  templateUrl: './board-dragdrop.component.html',
+  styleUrl: './board-dragdrop.component.css',
+  host: { 'class': 'h-full' },
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    TaskCardListComponent,
+    CdkDrag,
+    CdkDropList,
+    CdkDropListGroup,
+    CdkDragHandle,
+    CdkDragPlaceholder,
+    CdkDragPreview,
+    ListOptionsComponent,
+    TaskModalComponent,
+    PencilIconComponent,
+    CdkMenu,
+    CdkMenuItem,
+    TextIconComponent,
+    TicketRoadmapModalComponent,
+    CodeAnalyzerModalComponent,
+    AiIconComponent
+  ]
 })
 export class BoardDragdropComponent {
 
-  @Input() 
+  @Input()
   set board(value: any) {
     if (value && value.lists) {
       value.lists.forEach((list: any) => {
@@ -50,28 +52,23 @@ export class BoardDragdropComponent {
           const status = card.approvalStatus?.toString().trim().toUpperCase();
           if (isDone) {
             if (status === 'APPROVED') {
-              card.cardColor = 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-emerald-500/20';
-              card.statusText = 'Approuvée';
+              card.cardColor = 'bg-green-500 text-white border-none';
+              card.statusText = 'Acceptée';
               card.statusIcon = 'check';
-              card.message = 'Cette tâche a passé le contrôle qualité avec succès.';
-              card.badgeClass = 'bg-white/20 text-white';
+              card.message = 'Tâche validée.';
             } else if (status === 'REJECTED') {
-              card.cardColor = 'bg-gradient-to-br from-rose-500 to-red-600 text-white shadow-rose-500/20';
+              card.cardColor = 'bg-red-500 text-white border-none';
               card.statusText = 'Refusée';
               card.statusIcon = 'x';
-              card.message = 'Des corrections sont nécessaires pour valider cette tâche.';
-              card.badgeClass = 'bg-white/20 text-white';
+              card.message = 'Tâche à corriger.';
             } else {
-              card.cardColor = 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-orange-500/20';
-              card.statusText = 'En examen';
+              card.cardColor = 'bg-orange-500 text-white border-none';
+              card.statusText = 'En vérification';
               card.statusIcon = 'clock';
-              card.message = 'L\'administrateur examine actuellement votre travail.';
-              card.badgeClass = 'bg-white/20 text-white';
+              card.message = 'Attente de validation.';
             }
           } else {
-            card.cardColor = 'bg-cc-task-card border border-cc-border/5 hover:border-cc-accent/30 shadow-sm';
-            card.statusText = null;
-            card.badgeClass = 'bg-cc-accent/10 text-cc-accent';
+            card.cardColor = 'bg-cc-task-card';
           }
         });
       });
@@ -100,7 +97,19 @@ export class BoardDragdropComponent {
     this.selectedTicketForAi = {
       title: card.title,
       description: card.description || 'No description provided.',
-      priority: 'MEDIUM', 
+      priority: 'MEDIUM',
+      labels: [],
+      assignee: card.assignedToName,
+      estimatedHours: 0
+    };
+    this.showRoadmapModal = true;
+  }
+
+  onRoadmapRequested(card: any) {
+    this.selectedTicketForAi = {
+      title: card.title,
+      description: card.description || 'No description provided.',
+      priority: 'MEDIUM',
       labels: [],
       assignee: card.assignedToName,
       estimatedHours: 0
@@ -155,16 +164,16 @@ export class BoardDragdropComponent {
         }).subscribe({
           error: (err) => {
             console.error("Error updating list title", err);
-            list.title = oldTitle; 
+            list.title = oldTitle;
           }
         });
       }
-    }    
+    }
   }
 
   isDoneList(list: any): boolean {
     const title = list.title?.toLowerCase().trim() || '';
-    return title === 'terminé' || title === 'termine' || title === 'done' || title === 'fini';
+    return title === 'terminé' || title === 'termine' || title === 'teminé' || title === 'teminée' || title === 'done' || title === 'fini' || title.includes('termin');
   }
 
   moveTask(event: CdkDragDrop<any>) {
@@ -186,7 +195,7 @@ export class BoardDragdropComponent {
     }
 
     const movedTask = container.data.cards[currentIndex];
-    
+
     if (this.authService.user?.role === 'DEVELOPER' && this.isDoneList(container.data)) {
       if (movedTask.approvalStatus !== 'APPROVED' && movedTask.approvalStatus !== 'REJECTED') {
         movedTask.approvalStatus = 'PENDING';
@@ -232,6 +241,22 @@ export class BoardDragdropComponent {
     let modal = document.getElementById('task-modal');
     // @ts-ignore
     modal?.showModal();
+  }
+
+  approveTask(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.appService.approveTask(card.id).subscribe({
+      next: () => this.appService.refreshData(),
+      error: (err) => console.error("Error approving task", err)
+    });
+  }
+
+  rejectTask(event: MouseEvent, card: any) {
+    event.stopPropagation();
+    this.appService.rejectTask(card.id).subscribe({
+      next: () => this.appService.refreshData(),
+      error: (err) => console.error("Error rejecting task", err)
+    });
   }
 
 }

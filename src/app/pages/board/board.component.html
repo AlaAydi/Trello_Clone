@@ -1,92 +1,70 @@
 @if (board) {
-  <div class="h-screen flex flex-col overflow-hidden font-sans selection:bg-cc-accent/30">
+  <div class="h-screen flex flex-col overflow-hidden">
     <app-nav-bar></app-nav-bar>
-    
-    <div class="flex flex-grow overflow-hidden {{board.background}} relative" style="view-transition-name: board-transition">
-      
-      <!-- Premium Background Overlay -->
-      <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+    <div class="flex flex-grow overflow-hidden {{board.background}}" style="view-transition-name: board-transition">
 
-      <app-board-sidebar [workspace]="workspace" [board]="board"></app-board-sidebar>
-    
-      <div class="relative z-10 duration-200 h-full w-full flex flex-col overflow-hidden pb-4">
-    
-        <!-- Board Header -->
-        <div class="py-4 px-8 flex items-center justify-between text-white bg-black/10 backdrop-blur-md border-b border-white/5">
-          <div class="flex items-center gap-6">
-            <div class="relative flex flex-col min-w-[200px]">
-              <button [attr.aria-hidden]="editTitle" (click)="editTitle = true; titleInput.focus(); titleInput.select()"
-                class="{{editTitle? 'whitespace-pre -z-10' : 'z-0'}} group w-full text-start text-xl font-black tracking-tight text-white hover:text-cc-accent transition-all duration-300 rounded-lg px-2 -ml-2 uppercase">
-                {{boardTitleForm.getRawValue().title}}
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="inline-block ml-2 opacity-0 group-hover:opacity-40 transition-opacity"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-              </button>
-              <form [formGroup]="boardTitleForm" (ngSubmit)="titleInput.blur()" class="{{editTitle? 'z-10' : '-z-10 opacity-0'}} absolute w-full top-0 left-0">
-                <input [attr.aria-hidden]="!editTitle" [tabIndex]="editTitle? 1 : -1" (blur)="submitTitle()" #titleInput formControlName="title" type="text" id="board-title"
-                  class="w-full h-10 bg-white text-black text-lg font-black rounded-lg outline-none px-2 shadow-2xl border-2 border-cc-accent uppercase">
-              </form>
-            </div>
-
-            <!-- Stats or indicators could go here -->
-            <div class="flex items-center gap-3">
-               <div class="h-4 w-px bg-white/20"></div>
-               <div class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
-                 <span class="text-[10px] font-black uppercase tracking-widest opacity-60">Status:</span>
-                 <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400">Live</span>
-               </div>
-            </div>
+    <app-board-sidebar [workspace]="workspace" [board]="board"></app-board-sidebar>
+  
+    <div class="bg-cc-board-filter duration-200 h-full w-full flex flex-col overflow-hidden pb-2">
+  
+      <div class="py-4 px-6 gap-4 min-h-[64px] flex items-center justify-between border-b border-white/5 bg-[#0d1117]/40 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+          <div class="w-fit relative flex flex-col overflow-hidden">
+            <button [attr.aria-hidden]="editTitle" (click)="editTitle = true; titleInput.focus(); titleInput.select()"
+              class="{{editTitle? 'whitespace-pre opacity-0' : 'z-0'}} px-3 py-1 text-white text-xl font-bold tracking-tight hover:bg-white/5 rounded-lg transition-all truncate border border-transparent">{{boardTitleForm.getRawValue().title}}</button>
+            <form [formGroup]="boardTitleForm" (ngSubmit)="titleInput.blur()" class="{{editTitle? 'z-10' : 'opacity-0 pointer-events-none'}} absolute inset-0">
+              <input [attr.aria-hidden]="!editTitle" [tabIndex]="editTitle? 1 : -1" (blur)="submitTitle()" #titleInput formControlName="title" type="text" id="board-title"
+                class="w-full h-full bg-[#1c2128] border-2 border-blue-500/50 px-3 text-xl font-bold rounded-lg outline-none text-white shadow-lg shadow-blue-500/10">
+            </form>
           </div>
-
+        </div>
+        
+        <div class="flex items-center gap-2">
           <button aria-label="Show menu"
-            class="size-10 flex items-center justify-center hover:bg-white/10 focus:bg-white/10 rounded-xl transition-all duration-300 {{(settings | async)? 'invisible' : 'visible'}} group"
+            class="p-2.5 hover:bg-white/5 text-white/50 hover:text-white rounded-xl transition-all {{(settings | async)? 'invisible' : 'visible'}}"
             (click)="setSettingsSidebar(true)">
-            <app-menu-dots-icon dimensions="size-5" class="opacity-60 group-hover:opacity-100 transition-opacity"></app-menu-dots-icon>
+            <app-menu-dots-icon dimensions="size-5"></app-menu-dots-icon>
           </button>
         </div>
-
-        <!-- Pending Tasks Banner (Developer View) -->
-        @if (!authService.isTechLead && myPendingTasksCount > 0) {
-          <div class="mx-8 mt-6 animate-in fade-in slide-in-from-top-4 duration-700">
-            <div class="bg-gradient-to-r from-amber-500/20 to-orange-500/10 border border-amber-500/30 rounded-2xl p-5 flex items-center justify-between shadow-2xl shadow-amber-900/20 backdrop-blur-xl">
-              <div class="flex items-center gap-5">
-                <div class="size-12 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-500 border border-amber-500/30 shadow-inner">
-                  <span class="relative flex h-4 w-4">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-4 w-4 bg-amber-500 shadow-sm"></span>
-                  </span>
-                </div>
-                <div class="flex flex-col">
-                  <h3 class="text-[11px] font-black text-amber-500 uppercase tracking-[0.2em] mb-1">Action en cours</h3>
-                  <p class="text-sm text-white/70 font-medium">Vous avez <span class="text-white font-black underline decoration-amber-500/50">{{myPendingTasksCount}}</span> tâche{{myPendingTasksCount > 1 ? 's' : ''}} en cours d'examen par le Tech Lead.</p>
-                </div>
-              </div>
-              <div class="px-4 py-2 bg-black/20 rounded-xl text-[10px] font-black text-amber-500 border border-white/5 uppercase tracking-widest shadow-sm">
-                En attente de signature
-              </div>
-            </div>
-          </div>
-        }
-    
-        <!-- Board Main Content -->
-        <div id="board-content"
-          class="flex gap-4 p-8 flex-grow items-start overflow-x-auto min-w-full overflow-y-hidden scrollbar"
-          (mousedown)="ableToScroll? pointerScroll() : ''" (mouseenter)="setBoardScroll(true)">
-          @if (board.lists.length > 0) {
-            <app-board-dragdrop [board]="board"></app-board-dragdrop>
-          }
-          <div class="w-[280px] shrink-0">
-            <app-new-list-form [workspaceId]="workspaceId" [boardId]="boardId" [board]="board"></app-new-list-form>
-          </div>
-        </div>
-    
       </div>
 
-      <app-board-settings [board]="board" [workspace]="workspace"></app-board-settings>
+      @if (!authService.isTechLead && myPendingTasksCount > 0) {
+        <div class="mx-4 mt-3 animate-in fade-in slide-in-from-top-2 duration-500">
+          <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg shadow-amber-900/10 backdrop-blur-sm">
+            <div class="flex items-center gap-4">
+              <div class="size-10 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-500">
+                <span class="relative flex h-3 w-3">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
+              </div>
+              <div class="flex flex-col">
+                <h3 class="text-sm font-bold text-amber-500 uppercase tracking-wider">Vérification en cours</h3>
+                <p class="text-xs text-cc-subtle">Vous avez <span class="font-bold text-amber-600/80">{{myPendingTasksCount}}</span> tâche{{myPendingTasksCount > 1 ? 's' : ''}} en cours de vérification par le Tech Lead.</p>
+              </div>
+            </div>
+            <div class="px-3 py-1 bg-amber-500/10 rounded-full text-[10px] font-bold text-amber-600 border border-amber-500/20 uppercase tracking-tighter">
+              Action Requise: Attendre
+            </div>
+          </div>
+        </div>
+      }
+  
+      <div id="board-content"
+        class="flex gap-3 p-3 pb-2 flex-grow items-start overflow-x-auto min-w-full overflow-y-hidden"
+        (mousedown)="ableToScroll? pointerScroll() : ''" (mouseenter)="setBoardScroll(true)">
+        @if (board.lists.length > 0) {
+          <app-board-dragdrop [board]="board"></app-board-dragdrop>
+        }
+        <app-new-list-form [workspaceId]="workspaceId" [boardId]="boardId" [board]="board"></app-new-list-form>
+      </div>
+  
+    </div>
+
+    <app-board-settings [board]="board" [workspace]="workspace"></app-board-settings>
     </div>
   </div>
 } @else {
-  <div class="h-screen flex flex-col items-center justify-center bg-cc-base text-white/20">
-    <div class="text-8xl font-black italic opacity-10">404</div>
-    <p class="text-xl font-black uppercase tracking-widest mt-4">Tableau Introuvable</p>
-    <a routerLink="/" class="mt-8 px-6 py-2 bg-cc-accent text-white rounded-xl font-bold hover:scale-105 transition-transform">Retour à l'accueil</a>
-  </div>
+
+  <p class="text-3xl text-cc-subtle/60 font-semibold mt-20 mx-auto">Page not found.</p>
 }

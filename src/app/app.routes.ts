@@ -41,6 +41,11 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/approvals/approvals.component'),
         title: 'Approvals | Trello',
       },
+      {
+        path: 'super-admin',
+        loadComponent: () => import('./pages/super-admin-dashboard/super-admin-dashboard.component').then(m => m.SuperAdminDashboardComponent),
+        title: 'Super Admin Dashboard | Trello',
+      },
     ]
   },
   {

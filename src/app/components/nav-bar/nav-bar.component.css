@@ -5,6 +5,10 @@
   background-size: contain;
 }
 
+.board.base {
+  border-radius: 20px;
+}
+
 #trello-logo:hover {
   background-image: url(./../../../assets/logo.png);
 }

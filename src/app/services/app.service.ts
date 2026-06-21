@@ -99,6 +99,10 @@ export class AppService {
     return this.http.get<any[]>(`${this.apiUrl}/admin/developers`, { headers: this.getHeaders() });
   }
 
+  getLeaderboard() {
+    return this.http.get<any[]>(`${this.apiUrl}/leaderboard/developers`, { headers: this.getHeaders() });
+  }
+
   getData() {
     return this.data.asObservable();
   }

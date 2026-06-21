@@ -10,6 +10,23 @@
           <span routerLinkActive="text-cc-accent">Boards</span>
         </div>
       </a>
+      @if (authService.isSuperAdmin) {
+        <div class="mt-4 flex flex-col gap-1 border-t border-cc-border/15 pt-4">
+          <p class="text-[11px] text-cc-subtle font-bold uppercase tracking-wider px-3 mb-1">Administration</p>
+          <a routerLink="/super-admin" [queryParams]="{tab: 'stats'}" class="py-2 px-3 hover:bg-cc-overlay font-semibold rounded-md flex items-center gap-3 duration-200 transition-all" routerLinkActive="bg-cc-accent-muted text-cc-accent hover:bg-cc-accent-muted">
+            <div class="flex gap-2.5 items-center">
+              <i class="fas fa-chart-line text-sm w-4 text-center"></i>
+              <span>Dashboard</span>
+            </div>
+          </a>
+          <a routerLink="/super-admin" [queryParams]="{tab: 'users'}" class="py-2 px-3 hover:bg-cc-overlay font-semibold rounded-md flex items-center gap-3 duration-200 transition-all" routerLinkActive="bg-cc-accent-muted text-cc-accent hover:bg-cc-accent-muted">
+            <div class="flex gap-2.5 items-center">
+              <i class="fas fa-user-gear text-sm w-4 text-center"></i>
+              <span>Manage Users</span>
+            </div>
+          </a>
+        </div>
+      }
       <div class="mt-1 flex flex-col gap-1 border-t border-cc-border/15 pt-5">
         <p class="text-xs text-cc-subtle font-semibold pb-2">Workspaces</p>
         @if (data.workspaces.length > 0) {
