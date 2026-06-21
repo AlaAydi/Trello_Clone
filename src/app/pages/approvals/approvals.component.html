@@ -6,7 +6,8 @@
 
   <div class="bg-cc-menu rounded-xl shadow-lg border border-white/5 overflow-hidden">
     @if (pendingTasks.length > 0) {
-      <table class="w-full text-left border-collapse">
+      <!-- Desktop table view (hidden on mobile) -->
+      <table class="hidden md:table w-full text-left border-collapse">
         <thead>
           <tr class="bg-black/20 text-cc-subtle text-xs uppercase tracking-wider">
             <th class="px-6 py-4 font-semibold">Tâche</th>
@@ -48,6 +49,38 @@
           }
         </tbody>
       </table>
+
+      <!-- Mobile card list view (hidden on desktop) -->
+      <div class="block md:hidden divide-y divide-white/5">
+        @for (task of pendingTasks; track task.id) {
+          <div class="p-4 flex flex-col gap-4 bg-cc-overlay/10">
+            <div>
+              <h3 class="font-bold text-cc-text-primary text-base leading-snug">{{task.title}}</h3>
+              <p class="text-cc-subtle text-xs mt-1.5 leading-relaxed">{{task.description || 'Pas de description'}}</p>
+            </div>
+            
+            <div class="flex items-center justify-between pt-3 border-t border-white/5">
+              <div class="flex items-center gap-2">
+                <div class="size-7 bg-cc-accent/20 text-cc-accent rounded-full flex justify-center items-center font-bold text-xs">
+                  {{task.assignedToName?.charAt(0) || '?'}}
+                </div>
+                <span class="text-cc-text-primary text-xs">{{task.assignedToName || 'Non assigné'}}</span>
+              </div>
+              
+              <div class="flex gap-2">
+                <button (click)="approve(task.id)" 
+                  class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition-all active:scale-95 shadow-md">
+                  Approuver
+                </button>
+                <button (click)="reject(task.id)" 
+                  class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-xs font-semibold transition-all active:scale-95 shadow-md">
+                  Refuser
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     } @else {
       <div class="flex flex-col items-center justify-center py-20 text-cc-subtle">
         <div class="text-6xl mb-4">🎉</div>

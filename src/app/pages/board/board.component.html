@@ -3,12 +3,21 @@
     <app-nav-bar></app-nav-bar>
     <div class="flex flex-grow overflow-hidden {{board.background}}" style="view-transition-name: board-transition">
 
-    <app-board-sidebar [workspace]="workspace" [board]="board"></app-board-sidebar>
+    <app-board-sidebar #boardSidebar [workspace]="workspace" [board]="board"></app-board-sidebar>
   
     <div class="bg-cc-board-filter duration-200 h-full w-full flex flex-col overflow-hidden pb-2">
   
       <div class="py-4 px-6 gap-4 min-h-[64px] flex items-center justify-between border-b border-white/5 bg-[#0d1117]/40 backdrop-blur-sm">
         <div class="flex items-center gap-3">
+          <!-- Mobile Sidebar Toggle -->
+          <button (click)="boardSidebar.sidebar = !boardSidebar.sidebar" 
+            class="md:hidden p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white flex items-center justify-center transition-colors"
+            title="Toggle sidebar">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+
           <div class="w-fit relative flex flex-col overflow-hidden">
             <button [attr.aria-hidden]="editTitle" (click)="editTitle = true; titleInput.focus(); titleInput.select()"
               class="{{editTitle? 'whitespace-pre opacity-0' : 'z-0'}} px-3 py-1 text-white text-xl font-bold tracking-tight hover:bg-white/5 rounded-lg transition-all truncate border border-transparent">{{boardTitleForm.getRawValue().title}}</button>

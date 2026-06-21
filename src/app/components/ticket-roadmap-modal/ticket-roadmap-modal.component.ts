@@ -192,6 +192,16 @@ import { AiTicketRoadmapService, TicketData, RoadmapResponse } from '../../servi
     .dod-chip { background: rgba(16, 185, 129, 0.1); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .spinner { width: 30px; height: 30px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px; }
     @keyframes spin { 100% { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      .modal-header { padding: 16px; }
+      .roadmap-content-modern { padding: 16px; }
+      .overview-grid { grid-template-columns: 1fr; gap: 12px; }
+      .strategy-grid { grid-template-columns: 1fr; gap: 16px; }
+      .grid-2-col { grid-template-columns: 1fr; gap: 16px; }
+      .risks-grid { grid-template-columns: 1fr; gap: 12px; }
+      .step-title-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
   `]
 })
 export class TicketRoadmapModalComponent implements OnInit {

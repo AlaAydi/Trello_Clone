@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, inject, OnInit } from '@angular/core';
 import { FirstLetterPipe } from "../../pipes/first-letter.pipe";
 import { Router, RouterModule } from '@angular/router';
 import { ChevronIconComponent } from "../../icons/chevron-icon/chevron-icon.component";
@@ -21,7 +21,7 @@ import { AppService } from '../../services/app.service';
         MinusIconComponent
     ]
 })
-export class BoardSidebarComponent {
+export class BoardSidebarComponent implements OnInit {
 
   appService = inject(AppService);
   router = inject(Router);
@@ -29,6 +29,12 @@ export class BoardSidebarComponent {
 
   @Input({required: true}) workspace: any;
   @Input({ required: true }) board: any;
+
+  ngOnInit() {
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      this.sidebar = false;
+    }
+  }
 
   closeBoard(boardId: number) {
     this.appService.closeBoard(this.workspace.id, boardId).subscribe(() => {

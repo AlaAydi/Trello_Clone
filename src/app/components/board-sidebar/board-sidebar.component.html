@@ -1,6 +1,10 @@
-<div class="{{board.base}} h-full">
-  <div
-    class="{{sidebar? 'min-w-[260px]' : 'min-w-[16px]'}} h-full relative duration-200 bg-cc-board-sidebar text-cc-board-sidebar-text border-r border-[hsla(211,18%,68%,0.16)]">
+<!-- Mobile backdrop overlay when sidebar is open -->
+<div *ngIf="sidebar" (click)="sidebar = false" class="fixed inset-0 bg-black/60 z-30 md:hidden"></div>
+
+<div class="{{board.base}} h-full fixed inset-y-0 left-0 z-45 md:relative transition-all duration-300
+  {{sidebar ? 'translate-x-0 w-[260px] md:min-w-[260px] md:max-w-[260px]' : '-translate-x-full md:translate-x-0 w-0 md:w-[16px] md:min-w-[16px] md:max-w-[16px] overflow-hidden md:overflow-visible'}}">
+  
+  <div class="h-full w-full relative bg-cc-board-sidebar text-cc-board-sidebar-text border-r border-[hsla(211,18%,68%,0.16)]">
     <div class="h-full w-full {{sidebar? 'block' : 'invisible delay-200'}}">
       <div class="flex flex-col h-full absolute right-0 w-full min-w-[260px]">
         <div class="flex items-center py-2 px-3 min-h-14 border-b border-[hsla(211,18%,68%,0.16)] justify-between">
