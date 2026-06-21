@@ -416,3 +416,38 @@
   gap: 0.75rem;
   margin-top: 2rem;
 }
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .header-actions {
+    width: 100%;
+  }
+  .header-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+  .nav-section {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  .search-box {
+    max-width: none;
+    width: 100%;
+  }
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+  .premium-modal {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+}

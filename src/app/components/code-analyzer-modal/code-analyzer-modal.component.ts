@@ -360,6 +360,19 @@ import {
     .action-buttons { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
     .btn-primary { padding: 10px 24px; background: #6c5ce7; color: white; border: none; border-radius: 8px; cursor: pointer; }
     .btn-secondary { padding: 10px 24px; background: #f0f0f0; color: #333; border: none; border-radius: 8px; cursor: pointer; }
+
+    @media (max-width: 768px) {
+      .score-header { flex-direction: column; gap: 20px; align-items: stretch; }
+      .metrics-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .strengths-improvements { grid-template-columns: 1fr; gap: 16px; }
+      .code-compare { grid-template-columns: 1fr; gap: 16px; }
+      .issue-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .action-buttons { justify-content: stretch; }
+      .btn-primary, .btn-secondary { flex: 1; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .metrics-row { grid-template-columns: 1fr; }
+    }
   `]
 })
 export class CodeAnalyzerModalComponent implements OnInit {

@@ -30,6 +30,15 @@ export class NavBarComponent implements OnInit {
   boardPage: boolean = false;
   board: any;
   pendingCount: number = 0;
+  isMobileMenuOpen: boolean = false;
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
 
   ngOnInit() {
     this.appService.getBoard().subscribe({
@@ -42,6 +51,7 @@ export class NavBarComponent implements OnInit {
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
+        this.closeMobileMenu();
         const currentRoute = this.router.url.split('?')[0].split('/').filter(segment => segment !== '');
         if (currentRoute[0] == 'board') {
           this.boardPage = true;

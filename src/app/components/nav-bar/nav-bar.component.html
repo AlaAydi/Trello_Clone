@@ -9,7 +9,8 @@
         </span>
       </a>
 
-      <div class="flex items-center gap-1">
+      <!-- Desktop-only navigation dropdowns -->
+      <div class="hidden lg:flex items-center gap-1">
         <app-workspaces-dropdown [boardPage]="boardPage" [board]="board"></app-workspaces-dropdown>
         <app-recent-dropdown [boardPage]="boardPage" [board]="board"></app-recent-dropdown>
 
@@ -28,7 +29,8 @@
       </div>
     </div>
 
-    <div class="flex items-center gap-4">
+    <!-- Desktop-only right options -->
+    <div class="hidden lg:flex items-center gap-4">
       <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
 
       <div class="h-4 w-[1px] bg-[#30363d]"></div>
@@ -41,5 +43,101 @@
         Logout
       </button>
     </div>
+
+    <!-- Mobile view: toggle hamburger and mini theme buttons -->
+    <div class="flex lg:hidden items-center gap-2">
+      <app-theme-dropdown [boardPage]="boardPage" [board]="board"></app-theme-dropdown>
+      
+      <button 
+        (click)="toggleMobileMenu()" 
+        class="p-2 text-white/70 hover:text-white rounded-lg focus:outline-none transition-all"
+        aria-label="Toggle Navigation Menu"
+      >
+        <svg *ngIf="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+        <svg *ngIf="isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
   </nav>
+
+  <!-- Mobile Drawer Overlay -->
+  <div *ngIf="isMobileMenuOpen" class="fixed inset-0 z-[1000] flex lg:hidden bg-black/60 backdrop-blur-sm transition-opacity duration-300" (click)="closeMobileMenu()">
+    <!-- Drawer Panel -->
+    <div class="relative w-72 max-w-[80vw] h-full bg-[#0d1117] border-r border-[#30363d] flex flex-col p-6 overflow-y-auto shadow-2xl transition-transform duration-300" (click)="$event.stopPropagation()">
+      <div class="flex items-center justify-between pb-6 border-b border-[#30363d] mb-6">
+        <span class="text-xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
+          Task<span class="text-white font-light">Flow</span>
+        </span>
+        <button (click)="closeMobileMenu()" class="p-1 text-white/50 hover:text-white rounded-lg" aria-label="Close menu">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-6">
+        <!-- Navigation links inside drawer -->
+        <div class="flex flex-col gap-2">
+          <p class="text-[10px] text-[#8b949e] font-bold uppercase tracking-wider mb-2">Navigate</p>
+          <a routerLink="/boards" (click)="closeMobileMenu()" class="py-2 px-3 hover:bg-white/5 font-semibold text-sm rounded-lg flex items-center gap-3 text-white transition-all">
+            <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            Boards
+          </a>
+          @if (authService.isTechLead) {
+            <a routerLink="/approvals" (click)="closeMobileMenu()" class="py-2 px-3 hover:bg-white/5 font-semibold text-sm rounded-lg flex items-center justify-between text-white transition-all">
+              <span class="flex items-center gap-3">
+                <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Approvals
+              </span>
+              @if (pendingCount > 0) {
+                <span class="bg-amber-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">{{ pendingCount }}</span>
+              }
+            </a>
+          }
+        </div>
+
+        <!-- Dropdowns in mobile drawer -->
+        <div class="flex flex-col gap-2">
+          <p class="text-[10px] text-[#8b949e] font-bold uppercase tracking-wider mb-1">Workspaces</p>
+          <div class="w-full flex">
+            <app-workspaces-dropdown [boardPage]="boardPage" [board]="board" class="w-full"></app-workspaces-dropdown>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <p class="text-[10px] text-[#8b949e] font-bold uppercase tracking-wider mb-1">Recent Boards</p>
+          <div class="w-full flex">
+            <app-recent-dropdown [boardPage]="boardPage" [board]="board" class="w-full"></app-recent-dropdown>
+          </div>
+        </div>
+
+        @if (authService.isTechLead) {
+          <div class="flex flex-col gap-2 pt-2 border-t border-[#30363d]">
+            <p class="text-[10px] text-[#8b949e] font-bold uppercase tracking-wider mb-1">Quick Actions</p>
+            <div class="w-full flex">
+              <app-create-dropdown [boardPage]="boardPage" [board]="board" class="w-full"></app-create-dropdown>
+            </div>
+          </div>
+        }
+
+        <!-- Bottom Actions -->
+        <div class="mt-8 pt-6 border-t border-[#30363d] flex flex-col gap-3">
+          <button
+            *ngIf="authService.isLoggedIn"
+            (click)="logout(); closeMobileMenu()"
+            class="w-full py-2.5 text-center text-xs font-bold uppercase tracking-widest text-[#f85149] bg-[#f85149]/10 hover:bg-[#f85149]/20 border border-[#f85149]/20 hover:border-[#f85149]/40 rounded-xl transition-all"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
